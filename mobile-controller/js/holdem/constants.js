@@ -3,9 +3,9 @@ CONSTANTS = {
 		"dims": {
 			"svg": {
 				"xStart": 500,
-				"xPadding": 42.75,
+				"xPadding": 42.74,
 				"yStart": 1166,
-				"yPadding": 42.75,
+				"yPadding": 42.74,
 				"width": 238.11,
 				"height": 332.6
 			},
