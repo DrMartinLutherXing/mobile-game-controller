@@ -2,12 +2,12 @@ CONSTANTS = {
 	"card": {
 		"dims": {
 			"svg": {
-				"xStart": 500,
-				"xPadding": 42.74,
-				"yStart": 1166,
-				"yPadding": 42.74,
-				"width": 238.11,
-				"height": 332.6
+				"xStart": 499.98,
+				"xPadding": 42.70,
+				"yStart": 1165.98,
+				"yPadding": 42.50,
+				"width": 238.15,
+				"height": 333
 			},
 		},
 		"suit": [
