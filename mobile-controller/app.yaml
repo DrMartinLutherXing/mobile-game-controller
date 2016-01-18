@@ -4,6 +4,8 @@
   static_dir: js
 - url: /.*\.(html|css)
   static_dir: html
+- url: /img
+  static_dir: img
 # END mode: dynamic
 # START mode: static
 #- url: /js
