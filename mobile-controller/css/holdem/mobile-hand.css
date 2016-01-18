@@ -1,4 +1,151 @@
+html,
+body
+{
+	margin: 0;
+}
 .mobile-background
 {
 	background-image: radial-gradient(ellipse, green 0%, black 120%);
+	padding: 5%;
 }
+.m-holdem_card
+{
+	width: 130px;
+	height: 181.674px;
+	margin: 1%;
+}
+
+/**
+ * text classes
+*/
+.m-holdem_text{}
+.m-holdem_text.account_name
+{
+}
+.m-holdem_text.current_bid
+{
+	font-size: 1.5em;
+	color: white;
+	padding: 2% 0;
+}
+.m-holdem_text.current_money
+{
+}
+.m-holdem_next_bid
+{
+}
+
+/**
+ * container classes
+*/
+.m-holdem_top
+{
+	text-align: center;
+}
+.m-holdem_top > div div
+{
+	margin: 0 10%;
+	display: inline-block;
+}
+.m-holdem_cards
+{
+	text-align: center;
+}
+.m-holdem_cards div
+{
+	display: inline-block;
+	margin: 5px;
+}
+.m-holdem_interactions
+{
+	text-align: center;
+}
+
+/**
+ * classes for visual buttons: small/big blind, dealer
+*/
+.m-holdem_btn
+{
+	border-radius: 50%;
+	font-size: 1.3em;
+	width: 100px;
+	height: 100px;
+	border: 1px solid black;
+}
+.m-holdem_btn.small_blind
+{
+	background-color: darkblue;
+}
+.m-holdem_btn.small_blind:after
+{
+	content: "SMALL\nBLIND";
+	display: block;
+	text-align: center;
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.m-holdem_btn.big_blind
+{
+	background-color: yellow;
+}
+.m-holdem_btn.big_blind:after
+{
+	content: "BIG\nBLIND";
+	display: block;
+	text-align: center;
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.m-holdem_btn.dealer
+{
+	background-color: black;
+	border: 1px solid white;
+}
+.m-holdem_btn.dealer:after
+{
+	content: "DEALER";
+	color: white;
+	display: block;
+	text-align: center;
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.m-holdem_btn.hidden
+{
+	visibility: hidden;
+}
+
+/**
+ * classes for interactive buttons: raise, call, fold
+*/
+.m-holdem_button
+{
+}
+.m-holdem_button.raise
+{
+	background-color: "green";
+}
+.m-holdem_button.call
+{
+	background-color: "yellow";
+}
+.m-holdem_button.fold
+{
+	background-color: "red";
+}
+.m-holdem_allin_button{}
