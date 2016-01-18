@@ -1,13 +1,15 @@
+- url: /css
+  static_dir: css
+
+- url: /img
+  static_dir: img
+
 ## MODE SWITCHING -- DON'T MESS WITH (unless you know what you're doing)!
 # START mode: dynamic
 - url: /js
   static_dir: js
-- url: /css
-  static_dir: css
 - url: /.*\.html
   static_dir: html
-- url: /img
-  static_dir: img
 # END mode: dynamic
 # START mode: static
 #- url: /js
