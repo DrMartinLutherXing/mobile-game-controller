@@ -2,7 +2,9 @@
 # START mode: dynamic
 - url: /js
   static_dir: js
-- url: /.*\.(html|css)
+- url: /css
+  static_dir: css
+- url: /.*\.html
   static_dir: html
 - url: /img
   static_dir: img
