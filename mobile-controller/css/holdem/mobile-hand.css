@@ -21,6 +21,10 @@ body
  * text classes
 */
 .m-holdem_text{}
+.m-holdem_text + div
+{
+	padding: 1%;
+}
 .m-holdem_text.account_name
 {
 }
@@ -28,20 +32,21 @@ body
 {
 	font-size: 1.5em;
 	color: white;
-	padding: 2% 0;
+	padding: 1% 0;
 }
 .m-holdem_text.current_money
 {
 	font-size: 1.3em;
-	padding: 5px;
+	padding: 2px;
 }
 .m-holdem_next_bid
 {
 	display: inline-block;
-	padding: 0 25px;
+	padding: 2px 0;
 	border: 1px solid black;
 	background-color: white;
 	margin-right: 15px;
+	width: 100px;
 }
 
 /**
@@ -50,7 +55,7 @@ body
 .m-holdem_top
 {
 	position: absolute;
-	top: 5%;
+	top: 3%;
 	width: 100%;
 	height: 25%;
 	text-align: center;
@@ -63,7 +68,7 @@ body
 .m-holdem_cards
 {
 	position: absolute;
-	top: 30%;
+	top: 28%;
 	height: 32%;
 	width: 100%;
 	text-align: center;
@@ -76,7 +81,7 @@ body
 .m-holdem_interactions
 {
 	position: absolute;
-	top: 62%;
+	top: 60%;
 	width: 100%;
 	height: 35%;
 	text-align: center;
@@ -100,7 +105,8 @@ body
 }
 .m-holdem_btn.small_blind:after
 {
-	content: "SMALL\nBLIND";
+	content: "SMALL\a BLIND";
+	color: crimson;
 	display: block;
 	text-align: center;
 	position: relative;
@@ -117,7 +123,7 @@ body
 }
 .m-holdem_btn.big_blind:after
 {
-	content: "BIG\nBLIND";
+	content: "BIG\a BLIND";
 	display: block;
 	text-align: center;
 	position: relative;
@@ -157,9 +163,11 @@ body
 */
 .m-holdem_button
 {
+	outline: none;
 	width: 80%;
 	height: 20%;
 	margin: .5% 0;
+	font-size: 1.4em;
 }
 .m-holdem_button.raise
 {
@@ -173,4 +181,11 @@ body
 {
 	background-color: red;
 }
-.m-holdem_allin_button{}
+.m-holdem_allin_button
+{
+	vertical-align: middle;
+	font-size: 1.65em;
+	width: 30%;
+	background-color: gold;
+	font-weight: bold;
+}
