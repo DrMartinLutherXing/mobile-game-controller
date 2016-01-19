@@ -5,8 +5,10 @@ body
 }
 .mobile-background
 {
+	position: absolute;
+	width: 100%;
+	height: 100%;
 	background-image: radial-gradient(ellipse, green 0%, black 120%);
-	padding: 5%;
 }
 .m-holdem_card
 {
@@ -30,9 +32,16 @@ body
 }
 .m-holdem_text.current_money
 {
+	font-size: 1.3em;
+	padding: 5px;
 }
 .m-holdem_next_bid
 {
+	display: inline-block;
+	padding: 0 25px;
+	border: 1px solid black;
+	background-color: white;
+	margin-right: 15px;
 }
 
 /**
@@ -40,6 +49,10 @@ body
 */
 .m-holdem_top
 {
+	position: absolute;
+	top: 5%;
+	width: 100%;
+	height: 25%;
 	text-align: center;
 }
 .m-holdem_top > div div
@@ -49,6 +62,10 @@ body
 }
 .m-holdem_cards
 {
+	position: absolute;
+	top: 30%;
+	height: 32%;
+	width: 100%;
 	text-align: center;
 }
 .m-holdem_cards div
@@ -58,6 +75,10 @@ body
 }
 .m-holdem_interactions
 {
+	position: absolute;
+	top: 62%;
+	width: 100%;
+	height: 35%;
 	text-align: center;
 }
 
@@ -66,6 +87,7 @@ body
 */
 .m-holdem_btn
 {
+	display: inline-block;
 	border-radius: 50%;
 	font-size: 1.3em;
 	width: 100px;
@@ -135,17 +157,20 @@ body
 */
 .m-holdem_button
 {
+	width: 80%;
+	height: 20%;
+	margin: .5% 0;
 }
 .m-holdem_button.raise
 {
-	background-color: "green";
+	background-color: green;
 }
 .m-holdem_button.call
 {
-	background-color: "yellow";
+	background-color: yellow;
 }
 .m-holdem_button.fold
 {
-	background-color: "red";
+	background-color: red;
 }
 .m-holdem_allin_button{}
