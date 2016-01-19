@@ -85,6 +85,7 @@ var _m = games.holdem.ui.mobile = {
 		_m.consts = games.holdem.constants;
 		_m._build();
 		for (var value in initial)
-			_m[value]._update && _m[value]._update(initial[value]);
+			if (value in _m)
+				_m[value]._update && _m[value]._update(initial[value]);
 	},
 };
