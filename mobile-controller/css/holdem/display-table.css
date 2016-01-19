@@ -1,0 +1,77 @@
+html,
+body
+{
+	margin: 0;
+}
+.display-background
+{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-image: radial-gradient(ellipse, green 0%, black 120%);
+}
+.d-holdem_card
+{
+	display: inline-block;
+	width: 130px;
+	height: 181.674px;
+	margin: .5%;
+}
+
+/**
+ * display text classes
+*/
+.d-holdem_text
+{
+	color: white;
+	font-size: 1.4em;
+}
+.d-holdem_text.vary_title
+{
+	padding-bottom: 10px;
+}
+.d-holdem_text.vary_text
+{
+}
+.d-holdem_text.vary_text.cash:before
+{
+	content: '$';
+}
+.d-holdem_text.fix_title
+{
+	font-size: 1.6em;
+	text-align: center;
+	text-decoration: underline;
+	margin-bottom: 5px;
+}
+.d-holdem_text.fix_text
+{
+}
+
+/**
+ * display container classes
+*/
+.d-holdem_left
+{
+	position: absolute;
+	left: 5%;
+	width: 15%;
+	top: 25%;
+	vertical-align: middle;
+}
+.d-holdem_right
+{
+	text-align: center;
+	height: 90%;
+	top: 10%;
+	position: absolute;
+	left: 20%;
+	width: 80%;
+}
+.d-holdem_cards
+{
+}
+.d-holdem_textwrap
+{
+}
+
