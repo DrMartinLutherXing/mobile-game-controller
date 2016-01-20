@@ -1,8 +1,8 @@
-CT.require("core.actor");
+CT.require("agent.actor");
 
-core.dealer = CT.Class({
+agent.host = CT.Class({
 	"start": function(gametype) { // holdem...
 		CT.log("START " + gametype);
 		CT.pubsub.pm("Concierge", gametype);
 	}
-}, core.actor);
+}, agent.actor);

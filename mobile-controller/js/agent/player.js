@@ -1,6 +1,6 @@
-CT.require("core.actor");
+CT.require("agent.actor");
 
-core.player = CT.Class({
+agent.player = CT.Class({
 	"join": function(gamename) {
 		// gamename from gamelist (from Concierge)
 		CT.log("JOIN " + gamename);
@@ -12,4 +12,4 @@ core.player = CT.Class({
 		CT.log("SEEK " + message);
 		CT.pubsub.pm("Concierge", gametype);
 	}
-}, core.actor);
+}, agent.actor);
