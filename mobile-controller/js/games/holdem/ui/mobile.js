@@ -81,11 +81,14 @@ var _m = games.holdem.ui.mobile = {
 		for (var u in _updates)
 			_m[u]._update = _updates[u];
 	},
+	update: function(u) {
+		for (var value in u)
+			if (value in _m)
+				_m[value]._update && _m[value]._update(u[value]);
+	},
 	init: function(initial) {
 		_m.consts = games.holdem.constants;
 		_m._build();
-		for (var value in initial)
-			if (value in _m)
-				_m[value]._update && _m[value]._update(initial[value]);
+		_m.update(initial);
 	},
 };
