@@ -1,4 +1,7 @@
 games.holdem.constants = {
+	"start_cash": 10000,
+	"blind_increase_interval": 11,
+	"initial_big_blind": 100,
 	"card": {
 		"dims": {
 			"svg": {
