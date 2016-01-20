@@ -1,6 +1,6 @@
-CT.require("agent.actor");
+CT.require("agent.Actor");
 
-agent.host = CT.Class({
+agent.Host = CT.Class({
 	"create": function(gametype) { // holdem...
 		CT.log("CREATE " + gametype);
 		CT.pubsub.pm("Concierge", {
@@ -15,4 +15,4 @@ agent.host = CT.Class({
 			"data": gamename
 		});
 	}
-}, agent.actor);
+}, agent.Actor);

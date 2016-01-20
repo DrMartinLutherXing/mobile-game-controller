@@ -3,22 +3,22 @@ CT.require("CT.pubsub");
 // player actions: join
 // host actions: create, start
 
-agent.actor = CT.Class({
+agent.Actor = CT.Class({
 	"_": {
 		"cb": {
 			// application-level callbacks
 			//  - override w/ cfg object (2nd constructor argument)
 
 			// websocket events
-			"pm": CT.log.getLogger("agent.actor|pm"),
-			"message": CT.log.getLogger("agent.actor|message"),
-			"subscribe": CT.log.getLogger("agent.actor|subscribe"),
-			"join": CT.log.getLogger("agent.actor|join"),
-			"leave": CT.log.getLogger("agent.actor|leave"),
-			"open": CT.log.getLogger("agent.actor|open"),
-			"close": CT.log.getLogger("agent.actor|close"),
-			"error": CT.log.getLogger("agent.actor|error"),
-			"wserror": CT.log.getLogger("agent.actor|wserror"),
+			"pm": CT.log.getLogger("agent.Actor|pm"),
+			"message": CT.log.getLogger("agent.Actor|message"),
+			"subscribe": CT.log.getLogger("agent.Actor|subscribe"),
+			"join": CT.log.getLogger("agent.Actor|join"),
+			"leave": CT.log.getLogger("agent.Actor|leave"),
+			"open": CT.log.getLogger("agent.Actor|open"),
+			"close": CT.log.getLogger("agent.Actor|close"),
+			"error": CT.log.getLogger("agent.Actor|error"),
+			"wserror": CT.log.getLogger("agent.Actor|wserror"),
 
 			// player event
 			"gamelist": CT.log.getLogger("agent.actor|gamelist")
