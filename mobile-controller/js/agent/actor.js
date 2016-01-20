@@ -1,27 +1,27 @@
 CT.require("CT.pubsub");
 
 // player actions: join
-// dealer actions: start
+// host actions: create, start
 
-core.actor = CT.Class({
+agent.actor = CT.Class({
 	"_": {
 		"cb": {
 			// application-level callbacks
 			//  - override w/ cfg object (2nd constructor argument)
 
 			// websocket events
-			"pm": CT.log.getLogger("core.player|pm"),
-			"message": CT.log.getLogger("core.player|message"),
-			"subscribe": CT.log.getLogger("core.player|subscribe"),
-			"join": CT.log.getLogger("core.player|join"),
-			"leave": CT.log.getLogger("core.player|leave"),
-			"open": CT.log.getLogger("core.player|open"),
-			"close": CT.log.getLogger("core.player|close"),
-			"error": CT.log.getLogger("core.player|error"),
-			"wserror": CT.log.getLogger("core.player|wserror"),
+			"pm": CT.log.getLogger("agent.actor|pm"),
+			"message": CT.log.getLogger("agent.actor|message"),
+			"subscribe": CT.log.getLogger("agent.actor|subscribe"),
+			"join": CT.log.getLogger("agent.actor|join"),
+			"leave": CT.log.getLogger("agent.actor|leave"),
+			"open": CT.log.getLogger("agent.actor|open"),
+			"close": CT.log.getLogger("agent.actor|close"),
+			"error": CT.log.getLogger("agent.actor|error"),
+			"wserror": CT.log.getLogger("agent.actor|wserror"),
 
 			// player event
-			"gamelist": CT.log.getLogger("core.player|gamelist")
+			"gamelist": CT.log.getLogger("agent.actor|gamelist")
 		},
 		"on": {
 			"open": function() {
@@ -63,7 +63,7 @@ core.actor = CT.Class({
 			"pm": function(data, user) {
 				CT.log("PM " + user + ": " + JSON.stringify(data));
 				if (user == "lobby") { // system messages
-					if (data.type == "list")
+					if (data.action == "list")
 						this._.cb.gamelist(data.data);
 					else
 						throw "unimplemented lobby private message!";
