@@ -53,18 +53,21 @@ var _d = games.holdem.ui.display = {
 			};
 		});
 	},
+	update: function(u) {
+		for (var value in u) {
+			if (value in _d)
+				_d[value]._update && _d[value]._update(u[value]);
+			else if (value.indexOf("card") != -1) {
+					update = _d.card[value[value.length-1]];
+					update._update && update._update(u[value]);
+			}
+		}
+	},
 	init: function(initial) {
 		var update;
 		_d.consts = games.holdem.constants;
 		_d._build();
-		for (var value in initial) {
-			if (value in _d)
-				_d[value]._update && _d[value]._update(initial[value]);
-			else if (value.indexOf("card") != -1) {
-					update = _d.card[value[value.length-1]];
-					update._update && update._update(initial[value]);
-			}
-		}
+		_d.update(initial);
 	}
 
 };
