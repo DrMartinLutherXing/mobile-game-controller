@@ -36,6 +36,7 @@ class Lobby(pubsub.Bot):
 			if data not in self.games:
 				self.games[data] = set()
 			self.games[data].add(gname)
+			self.server.subscribe(gname, self.server.client(user))
 		elif action == "start":
 			gtype = data.split("_")[0]
 			if gtype in self.games:
