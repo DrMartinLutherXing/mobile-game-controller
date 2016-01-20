@@ -1,7 +1,7 @@
 CT.require("CT.pubsub");
 
 // player actions: join
-// host actions: start
+// host actions: create, start
 
 agent.actor = CT.Class({
 	"_": {
@@ -63,7 +63,7 @@ agent.actor = CT.Class({
 			"pm": function(data, user) {
 				CT.log("PM " + user + ": " + JSON.stringify(data));
 				if (user == "lobby") { // system messages
-					if (data.type == "list")
+					if (data.action == "list")
 						this._.cb.gamelist(data.data);
 					else
 						throw "unimplemented lobby private message!";
