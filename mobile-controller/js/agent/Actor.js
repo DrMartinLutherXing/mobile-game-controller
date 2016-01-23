@@ -26,8 +26,7 @@ agent.Actor = CT.Class({
 		"on": {
 			"open": function() {
 				CT.log("OPEN");
-				// don't call open cb yet...
-				CT.pubsub.subscribe("lobby");
+				this._.cb.open();
 			},
 			"close": function() {
 				CT.log("CLOSE");
@@ -43,10 +42,7 @@ agent.Actor = CT.Class({
 			},
 			"subscribe": function(data) {
 				CT.log("SUBSCRIBE " + JSON.stringify(data));
-				if (data.channel == "lobby")
-					this._.cb.open(data);
-				else
-					this._.cb.subscribe(data);
+				this._.cb.subscribe(data);
 			},
 			"join": function(channel, user) {
 				CT.log("JOIN " + channel + " " + user);
@@ -62,7 +58,7 @@ agent.Actor = CT.Class({
 			},
 			"pm": function(data, user) {
 				CT.log("PM " + user + ": " + JSON.stringify(data));
-				if (user == "lobby") { // system messages
+				if (user == "Concierge") { // system messages
 					if (data.action == "list")
 						this._.cb.gamelist(data.data);
 					else
@@ -73,13 +69,19 @@ agent.Actor = CT.Class({
 		}
 	},
 	"name": null,
-	"init": function(uname, cbs) {
-		this.name = uname;
+	"setCbs": function(cbs) {
 		this._.cb = CT.merge(cbs, this._.cb);
+	},
+	"init": function(cbs) {
+		this.setCbs(cbs);
 		for (var key in CT.pubsub._.cb) // pubsub events
 			CT.pubsub.set_cb(key, this._.on[key]);
+		core.ui.setActor(this);
+		setTimeout(this.postInit);
+	},
+	"postInit": function() {
 		// TODO: configurize later
-		CT.pubsub.connect("localhost", 8888, uname);
+		CT.pubsub.connect("localhost", 8888, this.name);
 	},
 	"say": function(channel, message) {
 		CT.log("SAY " + message);

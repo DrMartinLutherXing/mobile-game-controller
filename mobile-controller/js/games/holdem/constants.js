@@ -28,3 +28,12 @@ games.holdem.constants = {
 		],
 	}
 };
+games.holdem.initial = {
+	"table_btn": "dealer",
+	"account_name": "kieran",
+	"current_money": 10000,
+	"current_bid": 100,
+	"next_bid": 100,
+	"card_1": "diamondA",
+	"card_2": "heartA"
+};
