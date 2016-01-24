@@ -6,11 +6,13 @@ agent.Player = CT.Class({
 	"init": function() {
 		CT.log("player init");
 		this.setCbs({
-			"pm": this.onPm,
-			"message": core.ui.update
+			"pm": this.onPm
 		});
 		this.name = prompt("name?");
 		CT.pubsub.subscribe("lobby");
+	},
+	"say": function(channel, message) {
+		CT.pubsub.publish(channel, message);
 	},
 	"onPm": function(data, user) {
 		if (user == "Concierge") { // system messages
