@@ -7,9 +7,7 @@ agent.Actor = CT.Class({
 	"_": {
 		"cb": {
 			// application-level callbacks
-			//  - override w/ cfg object (2nd constructor argument)
-
-			// websocket events
+			//  - override w/ cfg object (init arg)
 			"pm": CT.log.getLogger("agent.Actor|pm"),
 			"message": CT.log.getLogger("agent.Actor|message"),
 			"subscribe": CT.log.getLogger("agent.Actor|subscribe"),
@@ -19,9 +17,6 @@ agent.Actor = CT.Class({
 			"close": CT.log.getLogger("agent.Actor|close"),
 			"error": CT.log.getLogger("agent.Actor|error"),
 			"wserror": CT.log.getLogger("agent.Actor|wserror"),
-
-			// player event
-			"gamelist": CT.log.getLogger("agent.actor|gamelist")
 		},
 		"on": {
 			"open": function() {
@@ -46,7 +41,7 @@ agent.Actor = CT.Class({
 			},
 			"join": function(channel, user) {
 				CT.log("JOIN " + channel + " " + user);
-				this._.cb.join(data);
+				this._.cb.join(channel, user);
 			},
 			"leave": function(channel, user) {
 				CT.log("LEAVE " + channel + " " + user);
@@ -58,13 +53,7 @@ agent.Actor = CT.Class({
 			},
 			"pm": function(data, user) {
 				CT.log("PM " + user + ": " + JSON.stringify(data));
-				if (user == "Concierge") { // system messages
-					if (data.action == "list")
-						this._.cb.gamelist(data.data);
-					else
-						throw "unimplemented lobby private message!";
-				} else // regular private message
-					this._.cb.pm(data);
+				this._.cb.pm(data, user);
 			}
 		}
 	},

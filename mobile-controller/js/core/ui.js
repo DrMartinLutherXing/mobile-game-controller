@@ -15,6 +15,9 @@ core.ui = {
 	"setActor": function(a) {
 		core.ui.actor = a;
 	},
+	"update": function(d) {
+		core.ui._ui.update(d);
+	},
 	"load": function(gamename, obj) {
 		if (gamename == "lobby") {
 			var pf = core.ui.platform;
