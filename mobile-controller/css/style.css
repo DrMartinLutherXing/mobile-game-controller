@@ -3,3 +3,24 @@
 	width: 100%;
 	height: 100%;
 }
+
+.fullwidth
+{
+	width: 98%;
+}
+
+.chat
+{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: 125px;
+	background: gray;
+}
+
+.chat > div
+{
+	overflow-y: scroll;
+	height: 100px;
+}
