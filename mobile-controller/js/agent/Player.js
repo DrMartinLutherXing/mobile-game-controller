@@ -11,9 +11,6 @@ agent.Player = CT.Class({
 		this.name = prompt("name?");
 		CT.pubsub.subscribe("lobby");
 	},
-	"say": function(channel, message) {
-		CT.pubsub.publish(channel, message);
-	},
 	"onPm": function(data, user) {
 		if (user == "Concierge") { // system messages
 			if (data.action == "list")
@@ -25,11 +22,5 @@ agent.Player = CT.Class({
 	},
 	"gamelist": function(games) {
 		core.ui.load("lobby", games);
-	},
-	"join": function(channel) {
-		// gamename from gamelist (from Concierge)
-		CT.log("JOIN " + channel);
-		CT.pubsub.subscribe(channel);
-		core.ui.load(channel.split("_")[0]);
 	}
 }, agent.Actor);

@@ -74,6 +74,11 @@ agent.Actor = CT.Class({
 		// TODO: configurize later
 		CT.pubsub.connect("localhost", 8888, this.name);
 	},
+	"join": function(channel) {
+		CT.log("JOIN " + channel);
+		CT.pubsub.subscribe(channel);
+		core.ui.load(channel.split("_")[0]);
+	},
 	"say": function(channel, message) {
 		CT.log("SAY " + message);
 		CT.pubsub.publish(channel, message);

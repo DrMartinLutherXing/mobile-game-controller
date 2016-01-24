@@ -8,7 +8,7 @@ agent.Host = CT.Class({
 		this.setCbs({
 			"join": this.onPlayer
 		});
-		core.ui.load("lobby");
+		this.join("lobby");
 	},
 	"onPlayer": function(pdata) {
 		CT.log("host.onPlayer: " + pdata);
