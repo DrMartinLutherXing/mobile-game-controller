@@ -19,6 +19,7 @@ agent.Host = CT.Class({
 			"action": "create",
 			"data": gametype
 		});
+		core.ui.load(gametype);
 	},
 	"start": function(gamename) { // holdem...
 		CT.log("START " + gamename);

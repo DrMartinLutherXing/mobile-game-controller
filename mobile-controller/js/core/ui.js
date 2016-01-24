@@ -19,6 +19,7 @@ core.ui = {
 		core.ui._ui.update(d);
 	},
 	"load": function(gamename, obj) {
+		core.ui.view.innerHTML = "";
 		if (gamename == "lobby") {
 			var pf = core.ui.platform;
 			CT.require("lobby.ui." + pf, true);
