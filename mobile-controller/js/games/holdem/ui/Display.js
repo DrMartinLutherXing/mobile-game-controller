@@ -60,7 +60,7 @@ games.holdem.ui.Display = CT.Class({
 		}
 	},
 	init: function(initial) {
-		this.view = CT.dom.node("", "div", "fullscreen display-background");
+		this.view.classList.add("display-background");
 		this.game_stage = CT.dom.node("", "div", "d-holdem_text vary_title");
 		this.pot_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
 		this.round_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
@@ -68,4 +68,4 @@ games.holdem.ui.Display = CT.Class({
 		this._build();
 		setTimeout(this.update, 0, initial || games.holdem.initial);
 	}
-});
+}, core.UI);

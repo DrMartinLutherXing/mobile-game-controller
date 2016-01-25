@@ -76,7 +76,7 @@ games.holdem.ui.Mobile = CT.Class({
 		};
 	},
 	init: function(initial) {
-		this.view = CT.dom.node("", "div", "fullscreen mobile-background");
+		this.view.classList.add("mobile-background");
 		this.table_btn = CT.dom.node("", "div", "m-holdem_btn dealer");
 		this.account_name = CT.dom.node("", "div", "m-holdem_text account_name");
 		this.current_bid = CT.dom.node("", "div", "m-holdem_text current_bid");
