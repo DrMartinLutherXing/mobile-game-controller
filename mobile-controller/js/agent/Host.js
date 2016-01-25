@@ -6,12 +6,24 @@ agent.Host = CT.Class({
 	"init": function() {
 		this.name = "host_" + Math.floor((Math.random() * 100000));
 		this.setCbs({
-			"join": this.onPlayer
+			"subscribe": this.onSubscribe,
+			"join": this.onJoin
 		});
-		core.ui.load("lobby");
+		this.join("lobby");
 	},
-	"onPlayer": function(pdata) {
-		CT.log("host.onPlayer: " + pdata);
+	"onSubscribe": function(data) {
+		CT.log("SUBSCRIBE " + data.channel);
+		core.ui.load(data.channel);
+	},
+	"onJoin": function(pdata) {
+		CT.log("host.onJoin: " + pdata);
+	},
+	"deal": function(player, card) {
+		CT.log("DEAL " + player + " " + card);
+		CT.pubsub.pm(player, {
+			"action": "deal",
+			"data": card
+		});
 	},
 	"create": function(gametype) { // holdem...
 		CT.log("CREATE " + gametype);

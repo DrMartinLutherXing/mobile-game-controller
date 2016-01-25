@@ -19,13 +19,14 @@ class Lobby(pubsub.Bot):
 
 	def on_subscribe(self, data):
 		log("Concierge received subscribe: %s"%(json.dumps(data),))
-		self.server.pm({
-			"user": data["user"],
-			"message": {
-				"action": "list",
-				"data": self.games
-			}
-		}, self)
+		if data["user"].split("_")[0] != "host":
+			self.server.pm({
+				"user": data["user"],
+				"message": {
+					"action": "list",
+					"data": self.games
+				}
+			}, self)
 
 	def on_unsubscribe(self, data):
 		log("Concierge received unsubscribe: %s"%(json.dumps(data),))

@@ -45,7 +45,7 @@ agent.Actor = CT.Class({
 			},
 			"leave": function(channel, user) {
 				CT.log("LEAVE " + channel + " " + user);
-				this._.cb.leave(data);
+				this._.cb.leave(channel, user);
 			},
 			"message": function(data) {
 				CT.log("MESSAGE " + JSON.stringify(data));
@@ -62,7 +62,9 @@ agent.Actor = CT.Class({
 		this._.cb = CT.merge(cbs, this._.cb);
 	},
 	"init": function(cbs) {
-		this.setCbs(cbs);
+		this.setCbs(CT.merge(cbs, {
+			"message": core.ui.update
+		}));
 		for (var key in CT.pubsub._.cb) // pubsub events
 			CT.pubsub.set_cb(key, this._.on[key]);
 		core.ui.setActor(this);
@@ -72,9 +74,21 @@ agent.Actor = CT.Class({
 		// TODO: configurize later
 		CT.pubsub.connect("localhost", 8888, this.name);
 	},
+	"join": function(channel) {
+		CT.log("JOIN " + channel);
+		CT.pubsub.subscribe(channel);
+		core.ui.load(channel);
+	},
+	"emit": function(channel, action, data) {
+		CT.log("EMIT " + channel + ", " + action + ", " + data);
+		CT.pubsub.publish(channel, {
+			"action": action,
+			"data": data
+		});
+	},
 	"say": function(channel, message) {
 		CT.log("SAY " + message);
-		CT.pubsub.publish(channel, message);
+		this.emit(channel, "chat", message);
 	},
 	"pm": function(user, message) {
 		CT.log("PM " + user + " " + message);

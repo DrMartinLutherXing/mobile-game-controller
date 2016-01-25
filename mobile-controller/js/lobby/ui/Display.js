@@ -8,5 +8,6 @@ lobby.ui.Display = CT.Class({
 				core.ui.actor.create(gtype);
 			}));
 		});
+		this.chat.open();
 	}
 }, core.UI);
