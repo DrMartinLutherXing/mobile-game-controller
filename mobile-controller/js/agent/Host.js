@@ -18,6 +18,13 @@ agent.Host = CT.Class({
 	"onJoin": function(pdata) {
 		CT.log("host.onJoin: " + pdata);
 	},
+	"deal": function(player, card) {
+		CT.log("DEAL " + player + " " + card);
+		CT.pubsub.pm(player, {
+			"action": "deal",
+			"data": card
+		});
+	},
 	"create": function(gametype) { // holdem...
 		CT.log("CREATE " + gametype);
 		CT.pubsub.pm("Concierge", {
