@@ -28,37 +28,37 @@ games.holdem.ui.Mobile = CT.Class({
 		this._updates();
 	},
 	_updates: function() {
-		var _updates = {
+		var that = this, _updates = {
 			"table_btn": function(btn) {
-				this.table_btn.className = "m-holdem_btn " + (btn || "hidden");
+				that.table_btn.className = "m-holdem_btn " + (btn || "hidden");
 			},
 			"account_name": function(name) {
-				this.account_name.innerHTML = name;
+				that.account_name.innerHTML = name;
 			},
 			"current_bid": function(money) {
-				this.current_bid.innerHTML = "$" + money;
+				that.current_bid.innerHTML = "$" + money;
 			},
 			"card_1": function(card) {
-				lib.card.setCardImage(this.card_1, card);
+				lib.card.setCardImage(that.card_1, card);
 			},
 			"card_2": function(card) {
-				lib.card.setCardImage(this.card_2, card);
+				lib.card.setCardImage(that.card_2, card);
 			},
 			"current_money": function(money) {
-				this.current_money.innerHTML = "$" + money;
+				that.current_money.innerHTML = "$" + money;
 			},
 			"next_bid": function(money) {
-				this.next_bid.innerHTML = "$" + money;
+				that.next_bid.innerHTML = "$" + money;
 			},
 			"raise_button": function(money) {
-				this.raise_button.innerHTML = "$" + money + " RAISE";
+				that.raise_button.innerHTML = "$" + money + " RAISE";
 			},
 			"call_button": function(money) {
-				this.call_button.innerHTML = 
+				that.call_button.innerHTML = 
 					money ? "$" + money + " CALL" : "CHECK";
 			},
 			"fold_button": function(fold) {
-				this.fold_button.innerHTML = fold ? "FOLD" : "CHECK / FOLD";
+				that.fold_button.innerHTML = fold ? "FOLD" : "CHECK / FOLD";
 			}
 		};
 		for (var u in _updates)
