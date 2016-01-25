@@ -54,7 +54,15 @@ core.Chat = CT.Class({
 		this._adduser(user);
 	},
 	"update": function(d) {
-		if (d.user == "Concierge") return; // for now ;)
-		this._write("<b>" + d.user + "</b>: " + d.message.data);
+		var data = d.message.data;
+		if (d.message.action == "newgame")
+			data = "<i>game added: " + d.message.data + "</i>";
+		else if (d.message.action == "oldgame")
+			data = "<i>game removed: " + d.message.data + "</i>";
+		else if (d.message.action == "start")
+			data = "<i>let the games begin!</i>";
+		else if (d.message.action == "move")
+			data = "<i>" + d.message.data + "</i>";
+		this._write("<b>" + d.user + "</b>: " + data);
 	}
 });

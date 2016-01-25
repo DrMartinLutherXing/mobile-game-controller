@@ -38,10 +38,8 @@ core.ui = {
 		core.ui._uis[channel].leave(user);
 	},
 	"update": function(d) {
-		if (d.message.action == "chat")
-			core.ui._uis[d.channel].chat.update(d);
-		else
-			core.ui._uis[d.channel].update(d);
+		core.ui._uis[d.channel].chat.update(d);
+		core.ui._uis[d.channel].update(d);
 	},
 	"load": function(gamename, obj) {
 		if (!(gamename in core.ui._uis)) {
