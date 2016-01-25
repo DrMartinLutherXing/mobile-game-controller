@@ -3,10 +3,27 @@ core.Chat = CT.Class({
 		this.name = name;
 		this._out = CT.dom.node();
 		this._in = CT.dom.smartField(this.say, "fullwidth");
+		this.button = CT.dom.button("show chat",
+			this.toggle, "chat_button");
 		this.node = CT.dom.wrapped([
 			this._out,
 			this._in
-		], "div", "chat");
+		], "div", "chat minimized");
+	},
+	"toggle": function() {
+		if (this.button.innerHTML == "show chat")
+			this.open();
+		else
+			this.close();
+	},
+	"open": function() {
+		this.button.innerHTML = "hide chat";
+		this.node.classList.remove("minimized");
+		this._in.focus();
+	},
+	"close": function() {
+		this.button.innerHTML = "show chat";
+		this.node.classList.add("minimized");
 	},
 	"say": function(message) {
 		core.ui.actor.say(this.name, message);
