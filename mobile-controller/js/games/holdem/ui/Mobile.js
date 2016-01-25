@@ -69,6 +69,12 @@ games.holdem.ui.Mobile = CT.Class({
 			if (value in this)
 				this[value]._update && this[value]._update(u[value]);
 	},
+	"_move": function(move) {
+		var name = this.name;
+		return function() {
+			core.ui.actor.emit(name, "move", move);
+		};
+	},
 	init: function(initial) {
 		this.view = CT.dom.node("", "div", "fullscreen mobile-background");
 		this.table_btn = CT.dom.node("", "div", "m-holdem_btn dealer");
@@ -79,17 +85,18 @@ games.holdem.ui.Mobile = CT.Class({
 		this.current_money = CT.dom.node("",
 			"div", "m-holdem_text current_money");
 		this.next_bid = CT.dom.node("", "div", "m-holdem_next_bid");
+
 		this.allin_button = CT.dom.button("ALL-IN",
-			null, "m-holdem_allin_button");
+			this._move("ALL-IN"), "m-holdem_allin_button");
 		//bid_slider: CT.dom.node(),
-		this.raise_button = CT.dom.button("$100 RAISE", null,
-			"m-holdem_button raise");
-		this.call_button = CT.dom.button("$100 CALL", null,
-			"m-holdem_button call");
-		this.fold_button = CT.dom.button("FOLD", null,
-			"m-holdem_button fold");
+		this.raise_button = CT.dom.button("$100 RAISE",
+			this._move("$100 RAISE"), "m-holdem_button raise");
+		this.call_button = CT.dom.button("$100 CALL",
+			this._move("$100 CALL"), "m-holdem_button call");
+		this.fold_button = CT.dom.button("FOLD",
+			this._move("FOLD"), "m-holdem_button fold");
 
 		this._build();
 		setTimeout(this.update, 0, initial || games.holdem.initial);
 	}
-});
+}, core.UI);
