@@ -23,5 +23,6 @@ lobby.ui.Mobile = CT.Class({
 			this.view.appendChild(CT.dom.node(gtype, "div", "big"));
 			this.gamelist[gtype].forEach(this.addButton);
 		}
+		this.chat.open();
 	}
 }, core.UI);
