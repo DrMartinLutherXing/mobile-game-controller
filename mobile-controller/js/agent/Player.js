@@ -1,6 +1,4 @@
-CT.require("CT.pubsub");
 CT.require("agent.Actor");
-CT.require("core.ui");
 
 agent.Player = CT.Class({
 	"init": function() {

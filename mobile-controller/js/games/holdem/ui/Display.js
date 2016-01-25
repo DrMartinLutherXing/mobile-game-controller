@@ -1,53 +1,49 @@
-CT.require("CT.dom");
 CT.require("games.holdem.constants");
 CT.require("lib.card");
 
-var _d = games.holdem.ui.display = {
-	consts: null,
-	view: CT.dom.node("", "div", "fullscreen display-background"),
-	game_stage: CT.dom.node("", "div", "d-holdem_text vary_title"),
-	pot_total: CT.dom.node("", "span", "d-holdem_text vary_text cash"),
-	round_total: CT.dom.node("", "span", "d-holdem_text vary_text cash"),
-	hand_number: CT.dom.node("", "span", "d-holdem_text vary_text"),
-	card: (function(){
+games.holdem.ui.Display = CT.Class({
+	consts: games.holdem.constants,
+	_buildCard: function() {
 		var cards = [];
 		while (cards.length < 5)
 			cards.push(CT.dom.node("", "div", "d-holdem_card"));
-		return cards;
-	})(),
-
+		this.card = cards;
+	},
+	_buildText: function(d) {
+		var text = Object.keys(d)[0];
+		return CT.dom.wrapped([
+				CT.dom.node(text, "span", "d-holdem_text fix_text"),
+				this[d[text]]
+			], "div", "d-holdem_textwrap");
+	},
 	_build: function() {
-		_d.view.appendChild(CT.dom.wrapped([
+		this._buildCard();
+		this.view.appendChild(CT.dom.wrapped([
 			CT.dom.wrapped([
 				CT.dom.node("POT", "div", "d-holdem_text fix_title"),
 				CT.dom.wrapped([
 						{"TOTAL:&nbsp;&nbsp;": "pot_total"},
 						{"BETS:&nbsp;&nbsp;": "round_total"},
 						{"HAND:&nbsp;&nbsp;": "hand_number"}
-					].map(function(d) {
-						var text = Object.keys(d)[0];
-						return CT.dom.wrapped([
-								CT.dom.node(text, "span", "d-holdem_text fix_text"),
-								_d[d[text]]
-							], "div", "d-holdem_textwrap");
-					}))
+					].map(this._buildText))
 			], "div", "d-holdem_left"),
 			CT.dom.wrapped([
-				_d.game_stage,
-				CT.dom.wrapped(_d.card, "div", "d-holdem_cards")
+				this.game_stage,
+				CT.dom.wrapped(this.card, "div", "d-holdem_cards")
 			], "div", "d-holdem_right")
 		]));
-		_d._updates();
+		this._updates();
 	},
 	_updates: function() {
+		var that = this;
 		["game_stage", "pot_total", "round_total",
 			"hand_number"].forEach(function(o) {
-				_d[o]._update = function(val) {
-					_d[o].innerHTML = val;
+				that[o]._update = function(val) {
+					that[o].innerHTML = val;
 				}
 			});
 
-		_d.card.forEach(function(c) {
+		this.card.forEach(function(c) {
 			c._update = function(cval) {
 				lib.card.setCardImage(c, cval);
 			};
@@ -55,19 +51,21 @@ var _d = games.holdem.ui.display = {
 	},
 	update: function(u) {
 		for (var value in u) {
-			if (value in _d)
-				_d[value]._update && _d[value]._update(u[value]);
+			if (value in this)
+				this[value]._update && this[value]._update(u[value]);
 			else if (value.indexOf("card") != -1) {
-					update = _d.card[value[value.length-1]];
-					update._update && update._update(u[value]);
+				update = this.card[value[value.length-1]];
+				update._update && update._update(u[value]);
 			}
 		}
 	},
 	init: function(initial) {
-		var update;
-		_d.consts = games.holdem.constants;
-		_d._build();
-		_d.update(initial);
+		this.view = CT.dom.node("", "div", "fullscreen display-background");
+		this.game_stage = CT.dom.node("", "div", "d-holdem_text vary_title");
+		this.pot_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
+		this.round_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
+		this.hand_number = CT.dom.node("", "span", "d-holdem_text vary_text");
+		this._build();
+		setTimeout(this.update, 0, initial || games.holdem.initial);
 	}
-
-};
+});

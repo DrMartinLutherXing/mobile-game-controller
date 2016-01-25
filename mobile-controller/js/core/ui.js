@@ -6,8 +6,7 @@ core.UI = CT.Class({
 		this.view = CT.dom.node("", "div", "fullscreen");
 		this.chat = new core.Chat(name);
 		this.view.appendChild(this.chat.node);
-	},
-	"update": function() {} // override
+	}
 });
 
 core.ui = {
@@ -28,19 +27,13 @@ core.ui = {
 			core.ui._ui.update(d);
 	},
 	"load": function(gamename, obj) {
+		var is_lobby = gamename == "lobby",
+			pf = core.ui.platform,
+			req_base = is_lobby ? "lobby" : ("games." + gamename);
 		core.ui.view.innerHTML = "";
-		if (gamename == "lobby") {
-			var pf = core.ui.platform;
-			CT.require("lobby.ui." + pf, true);
-			core.ui._ui = new lobby.ui[pf](obj, "lobby");
-		} else {
-			var pf = core.ui.platform.toLowerCase(); // until they're classes
-			CT.require("games." + gamename + ".ui." + pf, true);
-			CT.require("games." + gamename + ".constants", true);
-			core.ui._ui = games[gamename].ui[pf];
-			// remove explicit init once classes are set up
-			core.ui._ui.init(games[gamename].initial, gamename);
-		}
+		CT.require(req_base + ".ui." + pf, true);
+		core.ui._ui = new (is_lobby ? lobby
+			: games[gamename]).ui[pf](obj, gamename);
 		core.ui.view.appendChild(core.ui._ui.view);
 	}
 };
