@@ -25,7 +25,8 @@ games.holdem.ui.Display = CT.Class({
 						{"TOTAL:&nbsp;&nbsp;": "pot_total"},
 						{"BETS:&nbsp;&nbsp;": "round_total"},
 						{"HAND:&nbsp;&nbsp;": "hand_number"}
-					].map(this._buildText))
+					].map(this._buildText)),
+				this.start_button
 			], "div", "d-holdem_left"),
 			CT.dom.wrapped([
 				this.game_stage,
@@ -59,12 +60,17 @@ games.holdem.ui.Display = CT.Class({
 			}
 		}
 	},
+	_start: function() {
+		this.start_button.parentNode.removeChild(this.start_button);
+		core.ui.actor.start(this.name);
+	},
 	init: function(initial) {
 		this.view.classList.add("display-background");
 		this.game_stage = CT.dom.node("", "div", "d-holdem_text vary_title");
 		this.pot_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
 		this.round_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
 		this.hand_number = CT.dom.node("", "span", "d-holdem_text vary_text");
+		this.start_button = CT.dom.button("START", this._start);
 		this._build();
 		setTimeout(this.update, 0, initial || games.holdem.initial);
 	}
