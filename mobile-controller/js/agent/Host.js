@@ -6,12 +6,17 @@ agent.Host = CT.Class({
 	"init": function() {
 		this.name = "host_" + Math.floor((Math.random() * 100000));
 		this.setCbs({
-			"join": this.onPlayer
+			"subscribe": this.onSubscribe,
+			"join": this.onJoin
 		});
 		this.join("lobby");
 	},
-	"onPlayer": function(pdata) {
-		CT.log("host.onPlayer: " + pdata);
+	"onSubscribe": function(data) {
+		CT.log("SUBSCRIBE " + data.channel);
+		core.ui.load(data.channel);
+	},
+	"onJoin": function(pdata) {
+		CT.log("host.onJoin: " + pdata);
 	},
 	"create": function(gametype) { // holdem...
 		CT.log("CREATE " + gametype);
@@ -19,7 +24,6 @@ agent.Host = CT.Class({
 			"action": "create",
 			"data": gametype
 		});
-		core.ui.load(gametype);
 	},
 	"start": function(gamename) { // holdem...
 		CT.log("START " + gamename);
