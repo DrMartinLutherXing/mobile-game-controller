@@ -45,7 +45,7 @@ agent.Actor = CT.Class({
 			},
 			"leave": function(channel, user) {
 				CT.log("LEAVE " + channel + " " + user);
-				this._.cb.leave(data);
+				this._.cb.leave(channel, user);
 			},
 			"message": function(data) {
 				CT.log("MESSAGE " + JSON.stringify(data));
