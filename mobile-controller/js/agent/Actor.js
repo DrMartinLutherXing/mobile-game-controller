@@ -79,12 +79,16 @@ agent.Actor = CT.Class({
 		CT.pubsub.subscribe(channel);
 		core.ui.load(channel.split("_")[0]);
 	},
+	"emit": function(channel, action, data) {
+		CT.log("EMIT " + channel + ", " + action + ", " + data);
+		CT.pubsub.publish(channel, {
+			"action": action,
+			"data": data
+		});
+	},
 	"say": function(channel, message) {
 		CT.log("SAY " + message);
-		CT.pubsub.publish(channel, {
-			"action": "chat",
-			"data": message
-		});
+		this.emit(channel, "chat", message);
 	},
 	"pm": function(user, message) {
 		CT.log("PM " + user + " " + message);
