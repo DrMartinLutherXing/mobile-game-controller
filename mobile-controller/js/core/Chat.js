@@ -14,7 +14,7 @@ core.Chat = CT.Class({
 	},
 	"update": function(data) {
 		if (data.user == "Concierge") return; // for now ;)
-		this.out.appendChild(CT.dom.node("<b>" + data.user + "</b>: " + data.message));
+		this.out.appendChild(CT.dom.node("<b>" + data.user + "</b>: " + data.message.data));
 		this.out.scrollTop = this.out.scrollHeight;
 	}
 });

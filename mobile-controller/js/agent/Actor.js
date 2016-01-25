@@ -81,7 +81,10 @@ agent.Actor = CT.Class({
 	},
 	"say": function(channel, message) {
 		CT.log("SAY " + message);
-		CT.pubsub.publish(channel, message);
+		CT.pubsub.publish(channel, {
+			"action": "chat",
+			"data": message
+		});
 	},
 	"pm": function(user, message) {
 		CT.log("PM " + user + " " + message);

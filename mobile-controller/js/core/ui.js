@@ -22,8 +22,10 @@ core.ui = {
 		core.ui.actor = a;
 	},
 	"update": function(d) {
-		core.ui._ui.update(d);
-		core.ui._ui.chat.update(d);
+		if (d.message.action == "chat")
+			core.ui._ui.chat.update(d);
+		else
+			core.ui._ui.update(d);
 	},
 	"load": function(gamename, obj) {
 		core.ui.view.innerHTML = "";
