@@ -15,6 +15,18 @@ agent.Player = CT.Class({
 				this.gamelist(data.data);
 			else
 				throw "unimplemented lobby private message!";
+		} else if (user.split("_")[0] == "host") {
+			if (data.action == "deal") {
+				core.ui.update({
+					"user": user,
+					"channel": data.data.channel,
+					"message": {
+						"action": "deal",
+						"card": data.data.card
+					}
+				});
+			} else
+				CT.log("UNIMPLEMENTED PM! " + data.action);
 		} else // regular private message
 			CT.log("wassup? pm from whom?");
 	},

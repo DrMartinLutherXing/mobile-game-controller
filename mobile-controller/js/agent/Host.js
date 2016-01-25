@@ -13,6 +13,7 @@ agent.Host = CT.Class({
 	},
 	"onSubscribe": function(data) {
 		CT.log("SUBSCRIBE " + data.channel);
+		this.channel = data.channel;
 		core.ui.load(data.channel);
 	},
 	"onJoin": function(pdata) {
@@ -22,7 +23,10 @@ agent.Host = CT.Class({
 		CT.log("DEAL " + player + " " + card);
 		CT.pubsub.pm(player, {
 			"action": "deal",
-			"data": card
+			"data": {
+				"channel": this.channel,
+				"card": card
+			}
 		});
 	},
 	"create": function(gametype) { // holdem...
