@@ -22,15 +22,25 @@
 	left: 0px;
 	right: 0px;
 	height: 125px;
-	background: gray;
 	overflow: hidden;
 	-webkit-transition: height 1s;
 }
 
-.chat > div
+.chat_presence
+{
+	float: right;
+	overflow-y: scroll;
+	height: 100px;
+	width: 20%;
+	background: pink;
+}
+
+.chat_out
 {
 	overflow-y: scroll;
 	height: 100px;
+	width: 80%;
+	background: gray;
 }
 
 .chat_button
