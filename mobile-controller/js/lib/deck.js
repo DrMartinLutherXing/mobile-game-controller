@@ -1,24 +1,21 @@
-var consts = {
+lib.Card = CT.Class({
+	suit: "",
 	suits: [
 		"diamond",
 		"heart",
 		"spade",
 		"club"
 	],
+	value: "",
 	values: [
 		"2", "3", "4", "5", "6",
 		"7", "8", "9", "T", "J",
 		"Q", "K", "A"
-	]
-};
-
-lib.Card = CT.Class({
-	suit: "",
-	value: "",
+	],
 	rank: "",
 
 	_getRank: function(v) {
-		return consts.values.indexOf(v);
+		return this.values.indexOf(v);
 	},
 	val: function() {
 		//maybe define as getter
@@ -26,10 +23,10 @@ lib.Card = CT.Class({
 	},
 	init: function(s, v) {
 		this.suit = s ||
-			consts.suits[Math.floor(Math.random() * consts.suits.length)];
+			this.suits[Math.floor(Math.random() * this.suits.length)];
 		this.value = v ||
-			consts.values[Math.floor(Math.random() * consts.values.length)];
-		this.rank = this._getRank(this.value);
+			this.values[Math.floor(Math.random() * this.values.length)];
+		this.rank = this._getRank(v);
 	}
 });
 
