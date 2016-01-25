@@ -67,26 +67,22 @@ games.holdem.game =
 	"_updatePlayerCard": function(player, card, card_num) {
 		var g = games.holdem.game,
 			playerData = g._data[player._id],
-			cardKey = "card_" + card_num,
-			cardVal = card.val(), update = {};
+			cardKey = "card_" + card_num;
 		playerData[cardKey] = card;
-		update[cardKey] = cardVal;
 		//send player update about card
 		//may want to pass card object to player update
 		//where setCardImage could be attached to the card class instance
-		player.update(update);
+		g._host.deal(player, card);
 	},
 	"_updateDisplayCard": function(card, card_num) {
 		var g = games.holdem.game,
 			displayData = g._data[g._display._id],
-			cardKey = "card_" + card_num,
-			cardVal = card.val(), update = {};
+			cardKey = "card_" + card_num;
 		displayData[cardKey] = card;
-		update[cardKey] = cardVal;
 		//send display update about card
 		//may want to pass card object to display update
 		//where setCardImage could be attached to the card class instance
-		g._display.update(update);
+		g._host.deal(g._display, card);
 	},
 	"_updatePlayersStatus": function() {
 		var g = games.holdem.game, playerData;

@@ -15,7 +15,11 @@ var consts = {
 lib.Card = CT.Class({
 	suit: "",
 	value: "",
+	rank: "",
 
+	_getRank: function(v) {
+		return consts.values.indexOf(v);
+	},
 	val: function() {
 		//maybe define as getter
 		return this.suit + this.value;
@@ -25,6 +29,7 @@ lib.Card = CT.Class({
 			consts.suits[Math.floor(Math.random() * consts.suits.length)];
 		this.value = v ||
 			consts.values[Math.floor(Math.random() * consts.values.length)];
+		this.rank = this._getRank(this.value);
 	}
 });
 
