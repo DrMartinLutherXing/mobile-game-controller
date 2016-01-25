@@ -6,22 +6,36 @@ agent.Host = CT.Class({
 	"init": function() {
 		this.name = "host_" + Math.floor((Math.random() * 100000));
 		this.setCbs({
-			"message": core.ui.update,
 			"subscribe": this.onSubscribe,
-			"join": this.onJoin
+			"join": this.onJoin,
+			"leave": this.onLeave,
+			"message": this.onMessage
 		});
 		this.join("lobby");
 	},
-	"onSubscribe": function(data) {
-		CT.log("SUBSCRIBE " + data.channel);
-		this.channel = data.channel;
-		core.ui.load(data.channel);
+	"onMessage": function(msg) {
+		CT.log("Host.onMessage: " + JSON.stringify(msg));
+		core.ui.update(msg);
+		// TODO: also game.update()!!!
 	},
-	"onJoin": function(pdata) {
-		CT.log("host.onJoin: " + pdata);
+	"onSubscribe": function(data) {
+		CT.log("Host.onSubscribe: " + data.channel);
+		this.channel = data.channel;
+		core.ui.load(data.channel, data);
+		// TODO: also game.load()!!!
+	},
+	"onJoin": function(channel, user) {
+		CT.log("Host.onJoin: " + channel + " " + user);
+		core.ui.join(channel, user);
+		// TODO: also game.join()!!!
+	},
+	"onLeave": function(channel, user) {
+		CT.log("Host.onLeave: " + channel + " " + user);
+		core.ui.leave(channel, user);
+		// TODO: also game.leave()!!!
 	},
 	"deal": function(player, card) {
-		CT.log("DEAL " + player + " " + card);
+		CT.log("Host.deal: " + player + " " + card);
 		CT.pubsub.pm(player, {
 			"action": "deal",
 			"data": {

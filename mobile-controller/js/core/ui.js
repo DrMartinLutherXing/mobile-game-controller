@@ -4,11 +4,15 @@ core.UI = CT.Class({
 	"init": function(obj, name) {
 		this.name = name;
 		this.view = CT.dom.node("", "div", "fullscreen");
-		this.chat = new core.Chat(name);
+		this.chat = new core.Chat(name, obj);
 		this.view.appendChild(this.chat.node);
 		this.view.appendChild(this.chat.button);
 	},
-	"update": function() {} // override
+
+	// override
+	"update": function() {},
+	"leave": function() {},
+	"join": function() {}
 });
 
 core.ui = {
@@ -22,6 +26,16 @@ core.ui = {
 	},
 	"setActor": function(a) {
 		core.ui.actor = a;
+	},
+	"join": function(channel, user) {
+		CT.log("core.ui.join " + channel + " " + user);
+		core.ui._uis[channel].chat.join(user);
+		core.ui._uis[channel].join(user);
+	},
+	"leave": function(channel, user) {
+		CT.log("core.ui.leave " + channel + " " + user);
+		core.ui._uis[channel].chat.leave(user);
+		core.ui._uis[channel].leave(user);
 	},
 	"update": function(d) {
 		if (d.message.action == "chat")

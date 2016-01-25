@@ -75,7 +75,7 @@ games.holdem.ui.Mobile = CT.Class({
 			core.ui.actor.emit(name, "move", move);
 		};
 	},
-	init: function(initial) {
+	init: function() {
 		this.view.classList.add("mobile-background");
 		this.table_btn = CT.dom.node("", "div", "m-holdem_btn dealer");
 		this.account_name = CT.dom.node("", "div", "m-holdem_text account_name");
@@ -97,6 +97,6 @@ games.holdem.ui.Mobile = CT.Class({
 			this._move("FOLD"), "m-holdem_button fold");
 
 		this._build();
-		setTimeout(this.update, 0, initial || games.holdem.initial);
+		setTimeout(this.update, 0, games.holdem.initial);
 	}
 }, core.UI);

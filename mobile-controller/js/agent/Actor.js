@@ -75,7 +75,6 @@ agent.Actor = CT.Class({
 	"join": function(channel) {
 		CT.log("JOIN " + channel);
 		CT.pubsub.subscribe(channel);
-		core.ui.load(channel);
 	},
 	"emit": function(channel, action, data) {
 		CT.log("EMIT " + channel + ", " + action + ", " + data);

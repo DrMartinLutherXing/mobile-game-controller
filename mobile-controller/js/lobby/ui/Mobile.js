@@ -20,7 +20,7 @@ lobby.ui.Mobile = CT.Class({
 	},
 	"init": function(obj) {
 		CT.log("lobby mobile init: " + this.gamelist);
-		this.gamelist = obj;
+		this.gamelist = obj.gamelist;
 		for (var gtype in this.gamelist) {
 			this.view.appendChild(CT.dom.node(gtype, "div", "big"));
 			this.gamelist[gtype].forEach(this.addButton);

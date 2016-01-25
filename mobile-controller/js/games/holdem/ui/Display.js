@@ -64,7 +64,7 @@ games.holdem.ui.Display = CT.Class({
 		this.start_button.parentNode.removeChild(this.start_button);
 		core.ui.actor.start(this.name);
 	},
-	init: function(initial) {
+	init: function() {
 		this.view.classList.add("display-background");
 		this.game_stage = CT.dom.node("", "div", "d-holdem_text vary_title");
 		this.pot_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
@@ -72,6 +72,6 @@ games.holdem.ui.Display = CT.Class({
 		this.hand_number = CT.dom.node("", "span", "d-holdem_text vary_text");
 		this.start_button = CT.dom.button("START", this._start);
 		this._build();
-		setTimeout(this.update, 0, initial || games.holdem.initial);
+		setTimeout(this.update, 0, games.holdem.initial);
 	}
 }, core.UI);
