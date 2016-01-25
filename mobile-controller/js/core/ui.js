@@ -6,7 +6,8 @@ core.UI = CT.Class({
 		this.view = CT.dom.node("", "div", "fullscreen");
 		this.chat = new core.Chat(name);
 		this.view.appendChild(this.chat.node);
-	}
+	},
+	"update": function() {} // override
 });
 
 core.ui = {
