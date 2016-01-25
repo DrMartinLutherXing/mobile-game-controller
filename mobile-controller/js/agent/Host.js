@@ -6,6 +6,7 @@ agent.Host = CT.Class({
 	"init": function() {
 		this.name = "host_" + Math.floor((Math.random() * 100000));
 		this.setCbs({
+			"message": core.ui.update,
 			"subscribe": this.onSubscribe,
 			"join": this.onJoin
 		});
@@ -36,11 +37,14 @@ agent.Host = CT.Class({
 			"data": gametype
 		});
 	},
-	"start": function(gamename) { // holdem...
+	"start": function(gamename) {
 		CT.log("START " + gamename);
 		CT.pubsub.pm("Concierge", {
 			"action": "start",
 			"data": gamename
+		});
+		CT.pubsub.publish(gamename, {
+			"action": "start"
 		});
 	}
 }, agent.Actor);

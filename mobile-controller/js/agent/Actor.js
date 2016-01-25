@@ -62,9 +62,7 @@ agent.Actor = CT.Class({
 		this._.cb = CT.merge(cbs, this._.cb);
 	},
 	"init": function(cbs) {
-		this.setCbs(CT.merge(cbs, {
-			"message": core.ui.update
-		}));
+		this.setCbs(cbs);
 		for (var key in CT.pubsub._.cb) // pubsub events
 			CT.pubsub.set_cb(key, this._.on[key]);
 		core.ui.setActor(this);
