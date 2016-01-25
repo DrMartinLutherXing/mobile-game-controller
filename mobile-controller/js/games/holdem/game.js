@@ -6,7 +6,7 @@ games.holdem.game =
 		"turn", "river", "show"
 	],
 	"_round_bid": 100,
-	"_blind_increase_interval": 11
+	"_blind_increase_interval": 11,
 	"_game_stage": "",
 	"_dealer_index": 0,
 	"_hand_number": 0,
@@ -40,7 +40,7 @@ games.holdem.game =
 			};
 		});
 	},
-	"_buildPot" function() {
+	"_buildPot": function() {
 		var g = games.holdem.game;
 		g._forEachActive(function(p) {
 			g._pot[p._id] = 0;
@@ -62,7 +62,7 @@ games.holdem.game =
 	},
 	"_updateTableBlinds": function() {
 	},
-	"_updateUIs" function() {
+	"_updateUIs": function() {
 	},
 	"_updatePlayerCard": function(player, card, card_num) {
 		var g = games.holdem.game,
@@ -282,14 +282,13 @@ games.holdem.game =
 			g._sequence[0];
 		g._deal();
 		g._bid();
-		}
 	},
 	"_clean": function() {
 		var g = games.holdem.game;
 		g._updatePlayersStatus();
 		g._updateUIs();
 	},
-	"_end": funtion() {
+	"_end": function() {
 		var g = games.holdem.game;
 		g._clean();
 		g._setNextDealer();
@@ -317,5 +316,17 @@ games.holdem.game =
 		games.holdem._display = display;
 		games.holdem._players = players;
 		games.holdem.games._build();
+	},
+	"load": function(obj) {
+		CT.log("games.holdem.game.load: " + JSON.stringify(obj));
+	},
+	"update": function(obj) {
+		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
+	},
+	"join": function(channel, user) {
+		CT.log("games.holdem.game.join: " + channel + " " + user);
+	},
+	"leave": function(channel, user) {
+		CT.log("games.holdem.game.leave: " + channel + " " + user);
 	}
 };

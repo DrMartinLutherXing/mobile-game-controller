@@ -1,5 +1,6 @@
 CT.require("CT.all");
 CT.require("core.ui");
+CT.require("games.game");
 
 onload = function() {
 	var agents = { "Mobile": "Player", "Display": "Host" },

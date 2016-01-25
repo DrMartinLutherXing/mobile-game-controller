@@ -16,23 +16,30 @@ agent.Host = CT.Class({
 	"onMessage": function(msg) {
 		CT.log("Host.onMessage: " + JSON.stringify(msg));
 		core.ui.update(msg);
-		// TODO: also game.update()!!!
+		if (msg.channel != "lobby")
+			games.game.update(msg);
 	},
 	"onSubscribe": function(data) {
 		CT.log("Host.onSubscribe: " + data.channel);
 		this.channel = data.channel;
+		if (data.channel != "lobby") {
+			games.game.init({
+				"game_name": data.channel.split("_")[0]
+			});
+		}
 		core.ui.load(data.channel, data);
-		// TODO: also game.load()!!!
 	},
 	"onJoin": function(channel, user) {
 		CT.log("Host.onJoin: " + channel + " " + user);
 		core.ui.join(channel, user);
-		// TODO: also game.join()!!!
+		if (channel != "lobby")
+			games.game.join(channel, user);
 	},
 	"onLeave": function(channel, user) {
 		CT.log("Host.onLeave: " + channel + " " + user);
 		core.ui.leave(channel, user);
-		// TODO: also game.leave()!!!
+		if (channel != "lobby")
+			games.game.leave(channel, user);
 	},
 	"deal": function(player, card) {
 		CT.log("Host.deal: " + player + " " + card);
