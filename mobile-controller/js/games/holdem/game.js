@@ -257,17 +257,19 @@ games.holdem.game = new CT.Class({
 					player = g._players[startIndex];
 				g._bid_start_index = startIndex;
 				g._activeIndex = startIndex;
-				g._bidQuery(player);
+				g._host.turn(player);
 			},
 			"flop": function() {
 				var index =  g._nextActivePlayerIndex();
 				g._host.turn(g._players[index]);
 			},
 			"turn": function() {
-				g._bidQuery(g._players[g._nextActivePlayerIndex()]);
+				var index =  g._nextActivePlayerIndex();
+				g._host.turn(g._players[index]);
 			},
 			"river": function() {
-				g._bidQuery(g._players[g._nextActivePlayerIndex()]);
+				var index =  g._nextActivePlayerIndex();
+				g._host.turn(g._players[index]);
 			},
 			"show": function() {
 				g._end();
