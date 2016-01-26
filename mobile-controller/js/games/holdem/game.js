@@ -313,10 +313,10 @@ games.holdem.game = new CT.Class({
 	"start": function() {
 		this._start();
 	},
-	"init": function(host, display, players) {
+	"init": function(host, display) {//, players) {
 		games.holdem._host = host;
 		games.holdem._display = display;
-		games.holdem._players = players;
+		//games.holdem._players = players;
 		this._build();
 	},
 	"load": function(obj) {
