@@ -41,6 +41,13 @@ agent.Host = CT.Class({
 		if (channel != "lobby")
 			games.game.leave(channel, user);
 	},
+	"turn": function(player) {
+		CT.log("Host.turn: " + player);
+		CT.pubsub.publish(this.channel, {
+			"action": "turn",
+			"data": player
+		});
+	},
 	"deal": function(player, card) {
 		CT.log("Host.deal: " + player + " " + card);
 		CT.pubsub.pm(player, {
