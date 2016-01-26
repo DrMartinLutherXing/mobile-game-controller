@@ -2,29 +2,24 @@ games.game =
 {
 	"_id": null,
 	"_host": null,
-	"_game": null,
 	"_display": null,
-	"_players": [],
+	"_game": null,
+	"_games": [],
 	"update": function(u) {
 		CT.log("games.game.update: " + JSON.stringify(u));
-		games.game._game.update(u);
+		games.game._games[u.channel].update(u);
 	},
 	"join": function(channel, user) {
 		CT.log("games.game.join: " + channel + " " + user);
-		games.game._game.join(channel, user);
+		games.game._games[channel].join(user);
 	},
 	"leave": function(channel, user) {
 		CT.log("games.game.leave: " + channel + " " + user);
-		games.game._game.leave(channel, user);
+		games.game._games[channel].leave(user);
 	},
 	"load": function(obj) {
 		CT.log("games.game.load: " + JSON.stringify(obj));
 		games.game._game.load(obj);
-	},
-	"newPlayer": function(p) {
-		//verify player isn't already in _players
-		if ("_id" in p)
-			games.game._players.push(p);
 	},
 	"start": function(s) {
 		var g = games.game._game;
@@ -32,11 +27,12 @@ games.game =
 		g.start && g.start(s);
 	},
 	"init": function(i) {
-		var game, name;
-		if ("game_name" in i) {
-			name = i.game_name;
+		var game, channel = i.game_name,
+			name = channel.split("_")[0];
+		if (!(channel in games.game._games)) {
 			CT.require('games.' + name + ".import");
-			games.game._game = games[name].game;
+			games.game._games[channel] = games[name].game;
 		}
-	},
+		games.game._game = games.game._games[channel];
+	}
 };

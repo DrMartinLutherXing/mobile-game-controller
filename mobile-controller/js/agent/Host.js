@@ -24,7 +24,7 @@ agent.Host = CT.Class({
 		this.channel = data.channel;
 		if (data.channel != "lobby") {
 			games.game.init({
-				"game_name": data.channel.split("_")[0]
+				"game_name": data.channel
 			});
 		}
 		core.ui.load(data.channel, data);

@@ -323,10 +323,10 @@ games.holdem.game =
 	"update": function(obj) {
 		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
 	},
-	"join": function(channel, user) {
-		CT.log("games.holdem.game.join: " + channel + " " + user);
+	"join": function(user) {
+		CT.log("games.holdem.game.join: " + user);
 	},
-	"leave": function(channel, user) {
-		CT.log("games.holdem.game.leave: " + channel + " " + user);
+	"leave": function(user) {
+		CT.log("games.holdem.game.leave: " + user);
 	}
 };
