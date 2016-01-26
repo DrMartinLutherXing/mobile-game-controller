@@ -313,7 +313,7 @@ games.holdem.game = new CT.Class({
 		this._start();
 	},
 	"init": function() {
-		games._host = core.ui.actor;
+		games._host = core.actor;
 		games.holdem._display = {
 			_id: "table"
 		};
