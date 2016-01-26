@@ -315,15 +315,15 @@ games.holdem.game = new CT.Class({
 		this._start();
 	},
 	"init": function() {
-		games._host = core.actor;
-		games.holdem._display = {
+		this._host = core.actor;
+		this._display = {
 			_id: "table"
 		};
-		this._build();
 	},
 	"load": function(obj) {
 		CT.log("games.holdem.game.load: " + JSON.stringify(obj));
 		this._players = obj.presence;
+		this._build();
 	},
 	"update": function(obj) {
 		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
