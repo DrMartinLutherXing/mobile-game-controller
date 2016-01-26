@@ -1,8 +1,6 @@
 games.game =
 {
 	"_id": null,
-	"_host": null,
-	"_display": null,
 	"_game": null,
 	"_games": [],
 	"update": function(u) {
@@ -23,7 +21,6 @@ games.game =
 	},
 	"start": function(s) {
 		var g = games.game._game;
-		g.init && g.init(g._host, g._display, g._players);
 		g.start && g.start(s);
 	},
 	"init": function(i) {
@@ -32,7 +29,7 @@ games.game =
 		if (!(channel in games.game._games)) {
 			CT.require('games.' + name + ".import");
 			games.game._games[channel] =
-				new games[name].game(this._host, this._display);
+				new games[name].game();
 		}
 		games.game._game = games.game._games[channel];
 	}
