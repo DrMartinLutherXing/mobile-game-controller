@@ -1,5 +1,4 @@
-games.holdem.game =
-{
+games.holdem.game = new CT.Class({
 	"_data": {},
 	"_sequence": [
 		"preflop", "flop",
@@ -19,35 +18,35 @@ games.holdem.game =
 	"_deck": null,
 
 	"_forEachActive": function(cb) {
-		var g = games.holdem.game;
+		var g = this;
 		g._players.forEach(function(p) {
-			if (g._data[p._id].stat == "active") cb(p);
+			if (g._data[p].stat == "active") cb(p);
 		});
 	},
 	"_numActive":  function() {
-		var g = games.holdem.game, num = 0;
+		var g = this, num = 0;
 		g._forEachActive(function(){++num;});
 		return num;
 	},
 	"_build": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._deck = new Deck();
 		g._data[g._display._id] = {};
 		g._players.forEach(function(p) {
-			g._data[p._id] = {
+			g._data[p] = {
 				"stat": "active",
 				"cash": games.holdem.constants.start_cash
 			};
 		});
 	},
 	"_buildPot": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._forEachActive(function(p) {
 			g._pot[p._id] = 0;
 		});
 	},
 	"_nextActivePlayerIndex": function(startIndex) {
-		var g = games.holdem.game,
+		var g = this,
 			playerCount = g._players.length,
 			playerIndex =
 				((startIndex || g._dealer_index) + 1) % playerCount,
@@ -57,7 +56,7 @@ games.holdem.game =
 			else return playerIndex;
 	},
 	"_setNextDealer": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._dealer_index = g._nextActivePlayerIndex();
 	},
 	"_updateTableBlinds": function() {
@@ -65,7 +64,7 @@ games.holdem.game =
 	"_updateUIs": function() {
 	},
 	"_updatePlayerCard": function(player, card, card_num) {
-		var g = games.holdem.game,
+		var g = this,
 			playerData = g._data[player._id],
 			cardKey = "card_" + card_num;
 		playerData[cardKey] = card;
@@ -75,7 +74,7 @@ games.holdem.game =
 		g._host.deal(player, card);
 	},
 	"_updateDisplayCard": function(card, card_num) {
-		var g = games.holdem.game,
+		var g = this,
 			displayData = g._data[g._display._id],
 			cardKey = "card_" + card_num;
 		displayData[cardKey] = card;
@@ -85,9 +84,9 @@ games.holdem.game =
 		g._host.deal(g._display, card);
 	},
 	"_updatePlayersStatus": function() {
-		var g = games.holdem.game, playerData;
+		var g = this, playerData;
 		g._players.forEach(function(p) {
-			playerData = g._display[p._id];
+			playerData = g._data[p];
 			if (playerData.stat == "fold")
 				playerData.stat = "active";
 			if (playerData.cash <= 0)
@@ -95,7 +94,7 @@ games.holdem.game =
 		});
 	},
 	"_resetRound": function() {
-		var g = games.holdem.game,
+		var g = this,
 			blindIncs = g._hand_number / g._blind_increase_interval;
 		g._buildPot();
 		g._round_bid = 100 * Math.pow(2, Math.floor(blindIncs));
@@ -104,7 +103,7 @@ games.holdem.game =
 		
 	},
 	"_distributePot": function(winners) {
-		var g = games.holdem.game, potTotal = 0, splitTotal,
+		var g = this, potTotal = 0, splitTotal,
 			winnerBid, winnerTotals, playerLoss, updateValue;
 		winners.forEach(function(wpid) {
 			winnerTotals[wpid] = 0;
@@ -144,7 +143,7 @@ games.holdem.game =
 		}
 	},
 	"_rankHand": function(player) {
-		var g = games.holdem.game,
+		var g = this,
 			d = g._data[g._display._id], pid = player._id,
 			p = g._data[pid],
 			playerCards = [
@@ -155,7 +154,7 @@ games.holdem.game =
 		g._data[pid].rank = new lib.Rank(playerCards);
 	},
 	"_bestHandRanks": function() {
-		var g = games.holdem.game, highRank,
+		var g = this, highRank,
 			winners = [];
 		g._forEachActive(function(player) {
 			if (winners.length == 0)
@@ -168,13 +167,13 @@ games.holdem.game =
 		return winners;
 	},
 	"_determineWinners": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._forEachActive(g._rankHand);
 		g._distributePot(g._bestHandRanks());
 	},
 	
 	"_deal": function() {
-		var g = games.holdem.game, d =  {
+		var g = this, d =  {
 			"preflop": function() {
 				var index = 2, card,
 					playerId, playerIndex, playerData, player;
@@ -189,7 +188,7 @@ games.holdem.game =
 				}
 			},
 			"flop": function() {
-				var g = games.holdem.game, card, cardKey;
+				var g = this, card, cardKey;
 				//burn a card
 				g._deck.draw();
 				for (var index = 1; index < 4; ++index) {
@@ -198,14 +197,14 @@ games.holdem.game =
 				}
 			},
 			"turn": function() {
-				var g = games.holdem.game, card;
+				var g = this, card;
 				//burn a card
 				g._deck.draw();
 				card = g._deck.draw();
 				g._updateDisplayCard(card, 4);
 			},
 			"river": function() {
-				var g = games.holdem.game, card;
+				var g = this, card;
 				//burn a card
 				g._deck.draw();
 				card = g._deck.draw();
@@ -217,46 +216,48 @@ games.holdem.game =
 		};
 		d[g._game_stage]();
 	},
-	"_handlePlayerResponse": function(p, resp) {
-		var g = games.holdem.game, cash = resp.cash,
+	"_handlePlayerResponse": function(p, msg) {
+		var g = this, data = msg.data.split(" ").reverse(),
+			cash = data.length > 1 ? parseInt(data[1]) : 0,
 			playerIndex = g._players.indexOf(p),
 			nextPlayerIndex = g._nextActivePlayerIndex(playerIndex);
-		if (nextPlayerIndex == g._bid_start_index) g._run();
-		else {
-			switch (resp.type) {
-				case "raise":
+		if (msg.action == "move" && playerIndex == g._activeIndex)
+			switch (msg[0]) {
+				case "RAISE":
 					g._bid_start_index = playerIndex;
 					g._round_bid += cash;
-					g._pot[p._id] += g._round_bid;
-					g._data[p._id].cash -= cash;
+					g._pot[p] += g._round_bid;
+					g._data[p].cash -= cash;
 					g._round_total += cash;
 					break;
-				case "call":
-					g._pot[p._id] += cash;
-					g._data[p._id].cash -= cash;
+				case "CALL":
+					g._pot[p] += cash;
+					g._data[p].cash -= cash;
 					g._round_total += cash;
 					break;
-				case "fold":
-					g._data[p._id].stat = "fold";
+				case "FOLD":
+					g._data[p].stat = "fold";
 					break;
 				default:
 					break;
 			}
-			g._bidQuery(g._players[nextPlayerIndex]);
-		}
+
+		g._activeIndex = nextPlayerIndex;
+		if (nextPlayerIndex == g._bid_start_index) g._run();
 	},
 	"_bidQuery": function(p) {
-		var g = games.holdem.game;
+		var g = this;
 		p.requestResponse(g._round_bid, g._handlePlayerResponse);
 	},
 	"_bid": function() {
-		var g = games.holdem.game, b =  {
+		var g = this, b =  {
 			"preflop": function() {
 				var smallIndex =  g._nextActivePlayerIndex(),
 					bigIndex = g._nextActivePlayerIndex(smallIndex),
 					startIndex = g._nextActivePlayerIndex(bigIndex),
 					player = g._players[startIndex];
 				g._bid_start_index = startIndex;
+				g._activeIndex = startIndex;
 				g._bidQuery(player);
 			},
 			"flop": function() {
@@ -276,7 +277,8 @@ games.holdem.game =
 		b[g._game_stage]();
 	},
 	"_run": function() {
-		var g = games.holdem.game;
+		var g = this;
+		g._activeIndex = strartIndex;
 		g._game_stage = g._game_stage ?
 			g._sequence[g._sequence.indexOf(g._game_stage)+1] :
 			g._sequence[0];
@@ -284,18 +286,18 @@ games.holdem.game =
 		g._bid();
 	},
 	"_clean": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._updatePlayersStatus();
 		g._updateUIs();
 	},
 	"_end": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._clean();
 		g._setNextDealer();
 		g._start();
 	},
 	"_start": function() {
-		var g = games.holdem.game;
+		var g = this;
 		g._resetRound();
 		if (g._numActive() == 1)
 			g._forEachActive(function(player) {
@@ -309,24 +311,29 @@ games.holdem.game =
 	},
 
 	"start": function() {
-		games.holdem.game._start();
+		this._start();
 	},
 	"init": function(host, display, players) {
 		games.holdem._host = host;
 		games.holdem._display = display;
 		games.holdem._players = players;
-		games.holdem.games._build();
+		this._build();
 	},
 	"load": function(obj) {
 		CT.log("games.holdem.game.load: " + JSON.stringify(obj));
+		this._players = obj.presence;
 	},
 	"update": function(obj) {
 		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
+		if (this._players.indexOf(obj.user) != -1) {
+			this._handlePlayerResponse(obj.user, obj.message);
+		}
 	},
 	"join": function(user) {
 		CT.log("games.holdem.game.join: " + user);
 	},
 	"leave": function(user) {
 		CT.log("games.holdem.game.leave: " + user);
+		this._players.splice(this._player.indexOf(user), 1);
 	}
-};
+});
