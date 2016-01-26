@@ -31,7 +31,8 @@ games.game =
 			name = channel.split("_")[0];
 		if (!(channel in games.game._games)) {
 			CT.require('games.' + name + ".import");
-			games.game._games[channel] = games[name].game;
+			games.game._games[channel] =
+				new games[name].game(this._host, this._display);
 		}
 		games.game._game = games.game._games[channel];
 	}
