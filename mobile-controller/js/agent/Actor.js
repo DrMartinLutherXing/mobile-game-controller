@@ -70,6 +70,7 @@ agent.Actor = CT.Class({
 	},
 	"postInit": function() {
 		// TODO: configurize later
+		CT.pubsub.set_reconnect(false);
 		CT.pubsub.connect("localhost", 8888, this.name);
 	},
 	"join": function(channel) {
