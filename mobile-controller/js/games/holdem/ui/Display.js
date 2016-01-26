@@ -62,7 +62,7 @@ games.holdem.ui.Display = CT.Class({
 	},
 	_start: function() {
 		this.start_button.parentNode.removeChild(this.start_button);
-		core.ui.actor.start(this.name);
+		core.actor.start(this.name);
 	},
 	init: function() {
 		this.view.classList.add("display-background");

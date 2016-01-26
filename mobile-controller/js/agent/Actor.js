@@ -65,7 +65,7 @@ agent.Actor = CT.Class({
 		this.setCbs(cbs);
 		for (var key in CT.pubsub._.cb) // pubsub events
 			CT.pubsub.set_cb(key, this._.on[key]);
-		core.ui.setActor(this);
+		core.actor = this;
 		setTimeout(this.postInit);
 	},
 	"postInit": function() {

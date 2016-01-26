@@ -19,13 +19,9 @@ core.ui = {
 	"_uis": [],
 	"_ui": null,
 	"view": null,
-	"actor": null,
 	"platform": CT.align.width() < 720 ? "Mobile" : "Display",
 	"setView": function(view) {
 		core.ui.view = view;
-	},
-	"setActor": function(a) {
-		core.ui.actor = a;
 	},
 	"join": function(channel, user) {
 		CT.log("core.ui.join " + channel + " " + user);

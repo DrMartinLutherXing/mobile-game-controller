@@ -30,7 +30,7 @@ core.Chat = CT.Class({
 		this.node.classList.add("minimized");
 	},
 	"say": function(message) {
-		core.ui.actor.say(this.name, message);
+		core.actor.say(this.name, message);
 		this._in.value = "";
 	},
 	"_write": function(msg) {

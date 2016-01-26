@@ -72,7 +72,7 @@ games.holdem.ui.Mobile = CT.Class({
 	"_move": function(move) {
 		var name = this.name;
 		return function() {
-			core.ui.actor.emit(name, "move", move);
+			core.actor.emit(name, "move", move);
 		};
 	},
 	init: function() {

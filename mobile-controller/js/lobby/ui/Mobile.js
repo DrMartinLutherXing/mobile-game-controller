@@ -2,7 +2,7 @@ lobby.ui.Mobile = CT.Class({
 	"_buttons": {},
 	"addButton": function(game) {
 		this._buttons[game] = CT.dom.button(game, function() {
-			core.ui.actor.join(game);
+			core.actor.join(game);
 		}, null, game);
 		this.view.appendChild(this._buttons[game]);
 	},
