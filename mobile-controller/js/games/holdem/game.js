@@ -12,7 +12,6 @@ games.holdem.game = new CT.Class({
 	"_round_total": 0,
 	"_pot": {},
 	"_bid_start_index": 0,
-	"_host": null,
 	"_display": null,
 	"_players": null,
 	"_deck": null,
@@ -81,7 +80,7 @@ games.holdem.game = new CT.Class({
 		//send display update about card
 		//may want to pass card object to display update
 		//where setCardImage could be attached to the card class instance
-		g._host.deal(g._display, card);
+		g._host.deal(g._display._id, card);
 	},
 	"_updatePlayersStatus": function() {
 		var g = this, playerData;
@@ -241,9 +240,9 @@ games.holdem.game = new CT.Class({
 				default:
 					break;
 			}
-
 		g._activeIndex = nextPlayerIndex;
 		if (nextPlayerIndex == g._bid_start_index) g._run();
+		else g._host.turn(g._players[g._activeIndex]);
 	},
 	"_bidQuery": function(p) {
 		var g = this;
@@ -261,7 +260,8 @@ games.holdem.game = new CT.Class({
 				g._bidQuery(player);
 			},
 			"flop": function() {
-				g._bidQuery(g._players[g._nextActivePlayerIndex()]);
+				var index =  g._nextActivePlayerIndex();
+				g._host.turn(g._players[index]);
 			},
 			"turn": function() {
 				g._bidQuery(g._players[g._nextActivePlayerIndex()]);
@@ -278,7 +278,6 @@ games.holdem.game = new CT.Class({
 	},
 	"_run": function() {
 		var g = this;
-		g._activeIndex = strartIndex;
 		g._game_stage = g._game_stage ?
 			g._sequence[g._sequence.indexOf(g._game_stage)+1] :
 			g._sequence[0];
@@ -313,10 +312,11 @@ games.holdem.game = new CT.Class({
 	"start": function() {
 		this._start();
 	},
-	"init": function(host, display) {//, players) {
-		games.holdem._host = host;
-		games.holdem._display = display;
-		//games.holdem._players = players;
+	"init": function() {
+		games._host = core.ui.actor;
+		games.holdem._display = {
+			_id: "table"
+		};
 		this._build();
 	},
 	"load": function(obj) {
