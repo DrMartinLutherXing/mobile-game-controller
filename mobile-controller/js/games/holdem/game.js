@@ -30,7 +30,7 @@ games.holdem.game = new CT.Class({
 	},
 	"_build": function() {
 		var g = this;
-		g._deck = new Deck();
+		g._deck = new lib.Deck();
 		g._data[g._display._id] = {};
 		g._players.forEach(function(p) {
 			g._data[p] = {
