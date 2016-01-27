@@ -1,9 +1,11 @@
 CT.require("games.holdem.constants");
 CT.require("lib.card");
+CT.require("lib.Deck");
 
 games.holdem.ui.Mobile = CT.Class({
 	consts: games.holdem.constants,
 	_build: function() {
+		this._cards = [];
 		this.view.appendChild(CT.dom.wrapped([
 			CT.dom.wrapped([
 				CT.dom.wrapped([
@@ -64,10 +66,16 @@ games.holdem.ui.Mobile = CT.Class({
 		for (var u in _updates)
 			this[u]._update = _updates[u];
 	},
+	"_deal": function(c) {
+		var card = new lib.Card(c.suit, c.value);
+		this._cards.push(card);
+		this["card_" + this._cards.length]._update(card.val());
+	},
 	update: function(u) {
-		for (var value in u)
-			if (value in this)
-				this[value]._update && this[value]._update(u[value]);
+		CT.log("games.holdem.ui.Mobile.update: " + JSON.stringify(u));
+		var msg = u.message;
+		if (msg.action == "deal")
+			this._deal(msg.data);
 	},
 	"_move": function(move) {
 		var name = this.name;
