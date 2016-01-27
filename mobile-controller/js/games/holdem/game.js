@@ -210,7 +210,7 @@ games.holdem.game = new CT.Class({
 		d[g._game_stage]();
 	},
 	"_handleUpdate": function(p, msg) {
-		CT.log("games.holdem.game._handleUpdate: " + JSON.stringify(arguments));
+		CT.log("games.holdem.game._handleUpdate: " + p + JSON.stringify(msg));
 		if (msg.action == "turn")
 			return;
 		if (msg.action == "start")
@@ -323,9 +323,7 @@ games.holdem.game = new CT.Class({
 	},
 	"update": function(obj) {
 		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
-		if ((this._players.indexOf(obj.user) != -1) ||
-			(this._host.name == obj.user))
-				this._handleUpdate(obj.user, obj.message);
+		this._handleUpdate(obj.user, obj.message);
 	},
 	"join": function(user) {
 		CT.log("games.holdem.game.join: " + user);
