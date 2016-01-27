@@ -93,6 +93,7 @@ games.holdem.game = new CT.Class({
 	"_resetRound": function() {
 		var g = this,
 			blindIncs = g._hand_number / g._blind_increase_interval;
+		g._game_stage = "";
 		g._buildPot();
 		g._round_bid = 100 * Math.pow(2, Math.floor(blindIncs));
 	},
@@ -172,17 +173,12 @@ games.holdem.game = new CT.Class({
 	"_deal": function() {
 		var g = this, d =  {
 			"preflop": function() {
-				var index = 2, card,
-					playerId, playerIndex, playerData, player;
-				while (index) {
-					playerIndex = g._nextActivePlayerIndex();
-					player = g._players[playerIndex];
-					playerId = player;
-					card = g._deck.draw();
-					g._updatePlayerCard(player, card, index);
-					if (playerId == g._dealer_index)
-						--card;
-				}
+				var card, playerId, playerIndex, playerData, player;
+				for (var i = 0; i < 2; ++i)
+					g._forEachActive(function(player) {
+						card = g._deck.draw();
+						g._updatePlayerCard(player, card);
+					});
 			},
 			"flop": function() {
 				var g = this, card, cardKey;
@@ -214,6 +210,7 @@ games.holdem.game = new CT.Class({
 		d[g._game_stage]();
 	},
 	"_handleUpdate": function(p, msg) {
+		CT.log("games.holdem.game._handleUpdate: " + JSON.stringify(arguments));
 		if (msg.action == "start")
 			return this.start();
 		var g = this, data = msg.data.split(" ").reverse(),
@@ -253,7 +250,7 @@ games.holdem.game = new CT.Class({
 					player = g._players[startIndex];
 				g._bid_start_index = startIndex;
 				g._activeIndex = startIndex;
-				g._host.turn(player);
+				//g._host.turn(player);
 			},
 			"flop": function() {
 				var index =  g._nextActivePlayerIndex();
@@ -324,9 +321,9 @@ games.holdem.game = new CT.Class({
 	},
 	"update": function(obj) {
 		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
-		if (this._players.indexOf(obj.user) != -1) {
-			this._handleUpdate(obj.user, obj.message);
-		}
+		if ((this._players.indexOf(obj.user) != -1) ||
+			(this._host.name == obj.user))
+				this._handleUpdate(obj.user, obj.message);
 	},
 	"join": function(user) {
 		CT.log("games.holdem.game.join: " + user);
