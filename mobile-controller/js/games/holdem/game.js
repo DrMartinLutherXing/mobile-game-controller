@@ -252,7 +252,7 @@ games.holdem.game = new CT.Class({
 					player = g._players[startIndex];
 				g._bid_start_index = startIndex;
 				g._activeIndex = startIndex;
-				g._host.turn(player);
+				//g._host.turn(player);
 			},
 			"flop": function() {
 				var index =  g._nextActivePlayerIndex();
