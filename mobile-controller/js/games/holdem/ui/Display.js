@@ -17,6 +17,7 @@ games.holdem.ui.Display = CT.Class({
 			], "div", "d-holdem_textwrap");
 	},
 	_build: function() {
+		this._cards = [];
 		this._buildCard();
 		this.view.appendChild(CT.dom.wrapped([
 			CT.dom.wrapped([
@@ -50,7 +51,17 @@ games.holdem.ui.Display = CT.Class({
 			};
 		});
 	},
+	_flip: function(c) {
+		var card = new lib.Card(c.suit, c.value);
+		this._cards.push(card);
+		this.card[this._cards.length-1]._update(card.val());
+	},
 	update: function(u) {
+		CT.log("games.holdem.ui.Display.update: " + JSON.stringify(u));
+		var msg = u.message;
+		if (msg.action == "flip")
+			this._flip(msg.data);
+			/*
 		for (var value in u) {
 			if (value in this)
 				this[value]._update && this[value]._update(u[value]);
@@ -59,6 +70,7 @@ games.holdem.ui.Display = CT.Class({
 				update._update && update._update(u[value]);
 			}
 		}
+		*/
 	},
 	_start: function() {
 		this.start_button.parentNode.removeChild(this.start_button);
@@ -72,6 +84,6 @@ games.holdem.ui.Display = CT.Class({
 		this.hand_number = CT.dom.node("", "span", "d-holdem_text vary_text");
 		this.start_button = CT.dom.button("START", this._start);
 		this._build();
-		setTimeout(this.update, 0, games.holdem.initial);
+		//setTimeout(this.update, 0, games.holdem.initial);
 	}
 }, core.UI);
