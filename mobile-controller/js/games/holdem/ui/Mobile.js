@@ -77,6 +77,15 @@ games.holdem.ui.Mobile = CT.Class({
 		if (msg.action == "deal")
 			this._deal(msg.data);
 	},
+	load: function(obj) {
+		CT.log("games.holdem.ui.Mobile.load: " + JSON.stringify(obj));
+	},
+	join: function(user) {
+		CT.log("games.holdem.ui.Mobile.join: " + user);
+	},
+	leave: function(user) {
+		CT.log("games.holdem.ui.Mobile.leave: " + user);
+	},
 	"_move": function(move) {
 		var name = this.name;
 		return function() {
