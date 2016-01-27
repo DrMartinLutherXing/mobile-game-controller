@@ -53,13 +53,14 @@ lib.Deck = CT.Class({
 		}
 		return o;
 	},
+	draw: function() {
+		return this._deck.shift();
+	},
 	print: function() {
 		var string = "";
 		for (var i in this._deck)
 			string += this._deck[i].val() + "\n";
 		console.log(string);
-	},
-	draw: function() {
 	},
 	init: function() {
 		this._build();
