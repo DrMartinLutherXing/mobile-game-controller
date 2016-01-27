@@ -26,6 +26,7 @@ agent.Host = CT.Class({
 			games.game.init({
 				"game_name": data.channel
 			});
+			games.game.load(data);
 		}
 		core.ui.load(data.channel, data);
 	},
@@ -46,6 +47,13 @@ agent.Host = CT.Class({
 		CT.pubsub.publish(this.channel, {
 			"action": "turn",
 			"data": player
+		});
+	},
+	"flip": function(card) {
+		CT.log("Host.flip: " + card);
+		CT.pubsub.publish(this.channel, {
+			"action": "flip",
+			"data": card
 		});
 	},
 	"deal": function(player, card) {
