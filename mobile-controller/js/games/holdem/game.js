@@ -35,6 +35,7 @@ games.holdem.game = new CT.Class({
 	"_build": function() {
 		this._deck = new lib.Deck();
 		this._players.forEach(this._initPlayer);
+		this._data[this._host.name] = {};
 	},
 	"_buildPot": function() {
 		var g = this;
@@ -66,8 +67,6 @@ games.holdem.game = new CT.Class({
 			cardKey = "card_" + card_num;
 		playerData[cardKey] = card;
 		//send player update about card
-		//may want to pass card object to player update
-		//where setCardImage could be attached to the card class instance
 		g._host.deal(player, card);
 	},
 	"_updateDisplayCard": function(card, card_num) {
@@ -76,8 +75,6 @@ games.holdem.game = new CT.Class({
 			cardKey = "card_" + card_num;
 		displayData[cardKey] = card;
 		//send display update about card
-		//may want to pass card object to display update
-		//where setCardImage could be attached to the card class instance
 		g._host.flip(card);
 	},
 	"_updatePlayersStatus": function() {
@@ -149,7 +146,7 @@ games.holdem.game = new CT.Class({
 				d.card_1, d.card_2,
 				d.card_3, d.card_4, d.card_5
 			];
-		g._data[pid].rank = new lib.Rank(playerCards);
+		g._data[pid].rank = new lib.Rank(playerCards, 5);
 	},
 	"_bestHandRanks": function() {
 		var g = this, highRank,
@@ -181,7 +178,7 @@ games.holdem.game = new CT.Class({
 					});
 			},
 			"flop": function() {
-				var g = this, card, cardKey;
+				var card, cardKey;
 				//burn a card
 				g._deck.draw();
 				for (var index = 1; index < 4; ++index) {
@@ -190,14 +187,14 @@ games.holdem.game = new CT.Class({
 				}
 			},
 			"turn": function() {
-				var g = this, card;
+				var card;
 				//burn a card
 				g._deck.draw();
 				card = g._deck.draw();
 				g._updateDisplayCard(card, 4);
 			},
 			"river": function() {
-				var g = this, card;
+				var card;
 				//burn a card
 				g._deck.draw();
 				card = g._deck.draw();
@@ -252,7 +249,7 @@ games.holdem.game = new CT.Class({
 					player = g._players[startIndex];
 				g._bid_start_index = startIndex;
 				g._activeIndex = startIndex;
-				//g._host.turn(player);
+				g._host.turn(player);
 			},
 			"flop": function() {
 				var index =  g._nextActivePlayerIndex();
@@ -327,8 +324,10 @@ games.holdem.game = new CT.Class({
 	},
 	"join": function(user) {
 		CT.log("games.holdem.game.join: " + user);
-		this._players.push(user);
-		this._initPlayer(user);
+		if (user != this._host.name) {
+			this._players.push(user);
+			this._initPlayer(user);
+		}
 	},
 	"leave": function(user) {
 		CT.log("games.holdem.game.leave: " + user);
