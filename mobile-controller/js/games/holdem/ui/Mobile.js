@@ -105,6 +105,6 @@ games.holdem.ui.Mobile = CT.Class({
 			this._move("FOLD"), "m-holdem_button fold");
 
 		this._build();
-		setTimeout(this.update, 0, games.holdem.initial);
+//		setTimeout(this.update, 0, games.holdem.initial);
 	}
 }, core.UI);

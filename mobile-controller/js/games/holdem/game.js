@@ -211,6 +211,8 @@ games.holdem.game = new CT.Class({
 	},
 	"_handleUpdate": function(p, msg) {
 		CT.log("games.holdem.game._handleUpdate: " + JSON.stringify(arguments));
+		if (msg.action == "turn")
+			return;
 		if (msg.action == "start")
 			return this.start();
 		var g = this, data = msg.data.split(" ").reverse(),
@@ -250,7 +252,7 @@ games.holdem.game = new CT.Class({
 					player = g._players[startIndex];
 				g._bid_start_index = startIndex;
 				g._activeIndex = startIndex;
-				//g._host.turn(player);
+				g._host.turn(player);
 			},
 			"flop": function() {
 				var index =  g._nextActivePlayerIndex();
