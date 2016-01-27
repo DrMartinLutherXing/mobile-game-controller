@@ -67,6 +67,8 @@ core.Chat = CT.Class({
 			data = "<i>it's <b>" + d.message.data + "</b>'s turn</i>";
 		else if (d.message.action == "deal")
 			data = "<i>you get a <b>" + data.rank + "</b> of <b>" + data.suit + "</b>s</i>";
+		else if (d.message.action == "flip")
+			data = "<i>dealer flips a <b>" + data.rank + "</b> of <b>" + data.suit + "</b>s</i>";
 		this._write("<b>" + d.user + "</b>: " + data);
 	}
 });
