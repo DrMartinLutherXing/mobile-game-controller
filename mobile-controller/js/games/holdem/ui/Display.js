@@ -1,5 +1,4 @@
-CT.require("games.holdem.constants");
-CT.require("lib.card");
+CT.require("games.holdem.ui.Mobile");
 
 games.holdem.ui.Display = CT.Class({
 	consts: games.holdem.constants,
@@ -20,6 +19,7 @@ games.holdem.ui.Display = CT.Class({
 		this._cards = [];
 		this._buildCard();
 		this.view.appendChild(CT.dom.wrapped([
+			this.players,
 			CT.dom.wrapped([
 				CT.dom.node("POT", "div", "d-holdem_text fix_title"),
 				CT.dom.wrapped([
@@ -61,7 +61,11 @@ games.holdem.ui.Display = CT.Class({
 		var msg = u.message;
 		if (msg.action == "flip")
 			this._flip(msg.data);
+		else
+			for (var p in this._players)
+				this._players[p].update(u);
 			/*
+		}
 		for (var value in u) {
 			if (value in this)
 				this[value]._update && this[value]._update(u[value]);
@@ -76,14 +80,30 @@ games.holdem.ui.Display = CT.Class({
 		this.start_button.parentNode.removeChild(this.start_button);
 		core.actor.start(this.name);
 	},
-	init: function() {
+	join: function(user) {
+		CT.log("games.holdem.ui.Display.join " + user);
+		var pnode = CT.dom.node();
+		pnode.isPlayerNode = true;
+		this.players.appendChild(pnode);
+		this._players[user] = new games.holdem.ui.Mobile(pnode, user);
+	},
+	leave: function(user) {
+		CT.log("games.holdem.ui.Display.leave " + user);
+		this.players.removeChild(this._players[user].view);
+		delete this._players[user];
+	},
+	init: function(obj) {
 		this.view.classList.add("display-background");
 		this.game_stage = CT.dom.node("", "div", "d-holdem_text vary_title");
 		this.pot_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
 		this.round_total = CT.dom.node("", "span", "d-holdem_text vary_text cash");
 		this.hand_number = CT.dom.node("", "span", "d-holdem_text vary_text");
 		this.start_button = CT.dom.button("START", this._start);
+		this.players = CT.dom.node("", "div", "right downshift bordered padded");
 		this._build();
-		//setTimeout(this.update, 0, games.holdem.initial);
+
+		// init player instances
+		this._players = {};
+		obj.presence.forEach(this.join);
 	}
 }, core.UI);

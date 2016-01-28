@@ -66,27 +66,36 @@ games.holdem.ui.Mobile = CT.Class({
 	},
 	_build: function() {
 		this._cards = [];
-		this.view.appendChild(CT.dom.wrapped([
-			CT.dom.wrapped([
-				CT.dom.wrapped([
-					this.table_btn, this.account_name]),
-				this.current_bid
-			], "div", "m-holdem_top"),
-			CT.dom.wrapped([
-				this.card_1,
-				this.card_2
-			], "div", "m-holdem_cards"),
-			CT.dom.wrapped([
+		if (this.view.isPlayerNode) {
+			this.view.appendChild(CT.dom.wrapped([
+				this.account_name,
 				this.current_money,
+				this.current_bid
+			]));
+		}
+		else {
+			this.view.appendChild(CT.dom.wrapped([
 				CT.dom.wrapped([
-					this.next_bid,
-					this.allin_button]),
-				//this.bid_slider,
-				this.raise_button,
-				this.call_button,
-				this.fold_button
-			], "div", "m-holdem_interactions")
-		]));
+					CT.dom.wrapped([
+						this.table_btn, this.account_name]),
+					this.current_bid
+				], "div", "m-holdem_top"),
+				CT.dom.wrapped([
+					this.card_1,
+					this.card_2
+				], "div", "m-holdem_cards"),
+				CT.dom.wrapped([
+					this.current_money,
+					CT.dom.wrapped([
+						this.next_bid,
+						this.allin_button]),
+					//this.bid_slider,
+					this.raise_button,
+					this.call_button,
+					this.fold_button
+				], "div", "m-holdem_interactions")
+			]));
+		}
 		this._updates();
 	},
 	_updates: function() {
@@ -102,10 +111,12 @@ games.holdem.ui.Mobile = CT.Class({
 				that.current_bid.innerHTML = "$" + 0;//this._vars.current_bid;
 			},
 			"card_1": function() {
-				lib.card.setCardImage(that.card_1, that._cards[0].val());
+				if (that._cards.length == 2)
+					lib.card.setCardImage(that.card_1, that._cards[0].val());
 			},
 			"card_2": function() {
-				lib.card.setCardImage(that.card_2, that._cards[1].val());
+				if (that._cards.length == 2)
+					lib.card.setCardImage(that.card_2, that._cards[1].val());
 			},
 			"current_money": function() {
 				that.current_money.innerHTML = "$" + that._vars.cash;
@@ -192,9 +203,14 @@ games.holdem.ui.Mobile = CT.Class({
 			};
 		return buttonCb;
 	},
-	init: function() {
-		this.acc_name = core.actor.name;
-		this.view.classList.add("mobile-background");
+	init: function(view) {
+		if (view && view.isPlayerNode) {
+			this.view = view;
+			this.acc_name = this.name;
+		} else {
+			this.view.classList.add("mobile-background");
+			this.acc_name = core.actor.name;
+		}
 		this.table_btn = CT.dom.node("", "div", "m-holdem_btn dealer");
 		this.account_name = CT.dom.node("", "div", "m-holdem_text account_name");
 		this.current_bid = CT.dom.node("", "div", "m-holdem_text current_bid");

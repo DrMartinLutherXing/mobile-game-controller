@@ -4,9 +4,11 @@ core.UI = CT.Class({
 	"init": function(obj, name) {
 		this.name = name;
 		this.view = CT.dom.node("", "div", "fullscreen");
-		this.chat = new core.Chat(name, obj);
-		this.view.appendChild(this.chat.node);
-		this.view.appendChild(this.chat.button);
+		if (!obj.isPlayerNode) {
+			this.chat = new core.Chat(name, obj);
+			this.view.appendChild(this.chat.node);
+			this.view.appendChild(this.chat.button);
+		}
 	},
 
 	// override
