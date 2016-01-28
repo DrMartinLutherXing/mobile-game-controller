@@ -177,6 +177,10 @@ body
 {
 	background-color: yellow;
 }
+.m-holdem_button.check
+{
+	background-color: lightblue;
+}
 .m-holdem_button.fold
 {
 	background-color: red;
