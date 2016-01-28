@@ -8,12 +8,17 @@ games.holdem.ui.Mobile = CT.Class({
 	_responses: {
 		summary: function(s) {
 			CT.log("games.holdem.ui.Mobile._responses.summary: " + JSON.stringify(s));
+			this._vars.invested = 0;
 			this._setAnte(s.ante);
-			this._setCash(s.cash[this.pid])
+			this._vars.cash = s.cash[this.acc_name]
 			this._setBlinds(s.blinds)
 		},
 		move: function(m) {
 			CT.log("games.holdem.ui.Mobile._responses.move: " + JSON.stringify(m));
+			var g = this, move = m.split(" ").reverse(),
+				cash = move.length > 1 ? parseInt(move[1]) : 0;
+			if (move[0] == "RAISE") g._vars.round_bid += cash;
+			CT.log("games.holdem.ui.Mobile._responses.move._vars: " + JSON.stringify(g._vars));
 		},
 		turn: function(t) {
 			CT.log("games.holdem.ui.Mobile._responses.turn: " + t);
@@ -37,7 +42,6 @@ games.holdem.ui.Mobile = CT.Class({
 		this._vars.current_bid = c || 0;
 	},
 	_setAnte: function(a) {
-		this._vars.invested = 0;
 		this._vars.ante = this._vars.round_bid = this._vars.next_bid = a;
 		//this.next_bid._update(this._min_raise);
 	},
@@ -51,11 +55,11 @@ games.holdem.ui.Mobile = CT.Class({
 				break;
 			case 1:
 				btn = "small_blind";
-				blind = this.ante / 2;
+				blind = this._vars.ante / 2;
 				break;
 			case 2:
 				btn = "big_blind";
-				blind = this.ante;
+				blind = this._vars.ante;
 				break;
 			default:
 				btn = "hidden";
@@ -63,7 +67,8 @@ games.holdem.ui.Mobile = CT.Class({
 		}
 		this._vars.btn = btn;
 		this._vars.invested += blind;
-		this._setCurrentBid(blind);
+		this._vars.cash -= blind;
+		this._vars.current_bid = blind;
 		//this.table_btn._update(btn);
 	},
 	_fold: function() {
@@ -112,7 +117,7 @@ games.holdem.ui.Mobile = CT.Class({
 				that.account_name.innerHTML = that.acc_name;
 			},
 			"current_bid": function() {
-				that.current_bid.innerHTML = "$" + 0;//this._vars.current_bid;
+				that.current_bid.innerHTML = "$" + that._vars.current_bid;
 			},
 			"card_1": function() {
 				if (that._cards.length == 2)
@@ -132,7 +137,7 @@ games.holdem.ui.Mobile = CT.Class({
 				that.raise_button.innerHTML = "$" + that._vars.next_bid + " RAISE";
 			},
 			"call_button": function() {
-				var toCall = that.round_bid - that.invested;
+				var toCall = that._vars.round_bid - that._vars.invested;
 				if (toCall > 0) {
 					that.call_button.className = "m-holdem_button call";
 					that.call_button.innerHTML = "$" + toCall + " CALL";
@@ -181,7 +186,7 @@ games.holdem.ui.Mobile = CT.Class({
 						move = "CHECK";
 					else if (toCall > 0) {
 						move = "$" + toCall + " " + m;
-						that._vars.round_bid += toCall;
+						//that._vars.round_bid += toCall;
 						that._vars.invested += toCall;
 						that._vars.current_bid += toCall;
 						that._vars.cash -= toCall;
@@ -197,7 +202,7 @@ games.holdem.ui.Mobile = CT.Class({
 					that._vars.round_bid += toAll;
 					that._vars.invested += that._vars.cash;
 					that._vars.current_bid += that._vars.cash;
-					that._setCash(0);
+					that._vars.cash = 0;
 				}else {
 					move = m;
 					that._fold();
