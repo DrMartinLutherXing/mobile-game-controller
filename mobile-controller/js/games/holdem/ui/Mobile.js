@@ -45,7 +45,7 @@ games.holdem.ui.Mobile = CT.Class({
 		// assumes b is a list of player ids in order
 		// 0 - dealer, 1 - small, 2 - big
 		var btn, blind = 0;
-		switch (b.indexOf(this.account)) {
+		switch (b.indexOf(this.acc_name)) {
 			case 0:
 				btn = "dealer";
 				break;
