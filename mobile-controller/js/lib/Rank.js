@@ -1,4 +1,4 @@
-CT.require("lib.deck");
+CT.require("lib.Deck");
 lib.Rank = CT.Class({
 	_available: 0,
 	_string: "",
