@@ -16,7 +16,11 @@ games.holdem.ui.Mobile = CT.Class({
 			CT.log("games.holdem.ui.Mobile._responses.move: " + JSON.stringify(m));
 		},
 		turn: function(t) {
-			CT.log("games.holdem.ui.Mobile._responses.turn: " + JSON.stringify(t));
+			CT.log("games.holdem.ui.Mobile._responses.turn: " + t);
+			if (t == this.acc_name)
+				this.account_name.classList.add("mymove");
+			else
+				this.account_name.classList.remove("mymove");
 		},
 		deal: function(d) {
 			CT.log("games.holdem.ui.Mobile._responses.deal: " + JSON.stringify(d));
