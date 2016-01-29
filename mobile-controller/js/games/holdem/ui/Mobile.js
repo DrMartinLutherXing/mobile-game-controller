@@ -16,7 +16,7 @@ games.holdem.ui.Mobile = CT.Class({
 		move: function(m) {
 			CT.log("games.holdem.ui.Mobile._responses.move: " + JSON.stringify(m));
 			var g = this, move = m.split(" ").reverse(),
-				cash = move.length > 1 ? parseInt(move[1]) : 0;
+				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0;
 			if (move[0] == "RAISE") g._vars.round_bid += cash;
 			CT.log("games.holdem.ui.Mobile._responses.move._vars: " + JSON.stringify(g._vars));
 		},
@@ -193,7 +193,7 @@ games.holdem.ui.Mobile = CT.Class({
 					}
 				}else if (m == "RAISE") {
 					move = "$" + toRaise + " " + m;
-					that._vars.round_bid += that._vars.next_bid;
+					//that._vars.round_bid += that._vars.next_bid;
 					that._vars.invested += toRaise;
 					that._vars.current_bid += toRaise;
 					that._vars.cash -= toRaise;
