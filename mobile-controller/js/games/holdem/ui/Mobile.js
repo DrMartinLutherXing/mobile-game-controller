@@ -7,32 +7,36 @@ games.holdem.ui.Mobile = CT.Class({
 	_vars: {},
 	_responses: {
 		summary: function(s) {
-			CT.log("games.holdem.ui.Mobile._responses.summary: " + JSON.stringify(s));
+			this._log("_responses.summary", s);
 			this._vars.invested = 0;
 			this._setAnte(s.ante);
-			this._vars.cash = s.cash[this.acc_name]
-			this._setBlinds(s.blinds)
+			this._vars.cash = s.cash[this.acc_name];
+			this._setBlinds(s.blinds);
 		},
 		move: function(m) {
-			CT.log("games.holdem.ui.Mobile._responses.move: " + JSON.stringify(m));
+			this._log("_responses.move", m);
 			var g = this, move = m.split(" ").reverse(),
 				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0;
 			if (move[0] == "RAISE") g._vars.round_bid += cash;
 			CT.log("games.holdem.ui.Mobile._responses.move._vars: " + JSON.stringify(g._vars));
 		},
 		turn: function(t) {
-			CT.log("games.holdem.ui.Mobile._responses.turn: " + t);
+			this._log("_responses.turn", t);
 			if (t == this.acc_name)
 				this.account_name.classList.add("mymove");
 			else
 				this.account_name.classList.remove("mymove");
 		},
 		deal: function(d) {
-			CT.log("games.holdem.ui.Mobile._responses.deal: " + JSON.stringify(d));
+			this._log("_responses.deal", d);
 			var card = new lib.Card(d.suit, d.value);
 			this._cards.push(card);
 			//this["card_" + this._cards.length]._update(card.val());
 		}
+	},
+	_log: function(fname, data) {
+		CT.log("games.holdem.ui.Mobile(" + this.acc_name
+			+ ")." + fname + ": " + JSON.stringify(data));
 	},
 	_setCash: function(c) {
 		this._vars.cash = c || this._vars.cash;
