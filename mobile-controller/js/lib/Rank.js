@@ -240,7 +240,7 @@ lib.Rank = CT.Class({
 		this._available = available || 0; 
 		this._build();
 	}
-});
+}, core.Base);
 lib.Rank._test = function() {
 	var suits = [
 		"diamond",

@@ -1,8 +1,9 @@
 CT.require("agent.Actor");
 
 agent.Player = CT.Class({
+	"MOD_NAME": "agent.Player",
 	"init": function() {
-		CT.log("player init");
+		this.log("init");
 		this.setCbs({
 			"join": core.ui.join,
 			"leave": core.ui.leave,
@@ -31,8 +32,7 @@ agent.Player = CT.Class({
 			core.ui.load(data.channel, data);
 	},
 	"onPm": function(data, user) {
-		CT.log("Player.onPm: "
-			+ JSON.stringify(data) + " " + user);
+		this.log("onPm", data, user);
 		if (user == "Concierge") { // system messages
 			if (data.action == "list") {
 				this.gamelist = data.data;
@@ -45,14 +45,12 @@ agent.Player = CT.Class({
 				this._pmUpdate(user, data.data.channel,
 					"deal", data.data.card);
 			} else
-				CT.log("UNIMPLEMENTED PM! " + data.action);
+				this.log("UNIMPLEMENTED PM!", data.action);
 		} else // regular private message
-			CT.log("wassup? pm from whom?");
+			this.log("wassup? pm from whom?");
 	},
 	"joinLobby": function() {
-		CT.log("Player.joinLobby: "
-			+ JSON.stringify(this.lobbydata) + " "
-			+ JSON.stringify(this.gamelist));
+		this.log("joinLobby", this.lobbydata, this.gamelist);
 		if (this.lobbydata && this.gamelist)
 			core.ui.load("lobby", CT.merge(this.lobbydata, {
 				"gamelist": this.gamelist

@@ -73,4 +73,4 @@ core.Chat = CT.Class({
 			data = "<i>summary: <b>" + JSON.stringify(data) + "</b></i>";
 		this._write("<b>" + d.user + "</b>: " + data);
 	}
-});
+}, core.Base);

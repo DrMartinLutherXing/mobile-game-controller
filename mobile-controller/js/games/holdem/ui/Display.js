@@ -1,6 +1,7 @@
 CT.require("games.holdem.ui.Mobile");
 
 games.holdem.ui.Display = CT.Class({
+	"MOD_NAME": "games.holdem.ui.Display",
 	consts: games.holdem.constants,
 	_buildCard: function() {
 		var cards = [];
@@ -57,7 +58,7 @@ games.holdem.ui.Display = CT.Class({
 		this.card[this._cards.length-1]._update(card.val());
 	},
 	update: function(u) {
-		CT.log("games.holdem.ui.Display.update: " + JSON.stringify(u));
+		this.log("update", u);
 		var msg = u.message;
 		if (msg.action == "flip")
 			this._flip(msg.data);
@@ -81,14 +82,14 @@ games.holdem.ui.Display = CT.Class({
 		core.actor.start(this.name);
 	},
 	join: function(user) {
-		CT.log("games.holdem.ui.Display.join " + user);
+		this.log("join", user);
 		var pnode = CT.dom.node();
 		pnode.isPlayerNode = true;
 		this.players.appendChild(pnode);
 		this._players[user] = new games.holdem.ui.Mobile(pnode, user);
 	},
 	leave: function(user) {
-		CT.log("games.holdem.ui.Display.leave " + user);
+		this.log("leave", user);
 		this.players.removeChild(this._players[user].view);
 		delete this._players[user];
 	},

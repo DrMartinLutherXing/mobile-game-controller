@@ -4,6 +4,7 @@ CT.require("CT.pubsub");
 // host actions: create, start
 
 agent.Actor = CT.Class({
+	"MOD_NAME": "agent.Actor",
 	"_": {
 		"cb": {
 			// application-level callbacks
@@ -20,44 +21,43 @@ agent.Actor = CT.Class({
 		},
 		"on": {
 			"open": function() {
-				CT.log("OPEN");
+				this.log("on.open");
 				this._.cb.open();
 			},
 			"close": function() {
-				CT.log("CLOSE");
+				this.log("on.close");
 				this._.cb.close();
 			},
 			"wserror": function() {
-				CT.log("WEBSOCKET ERROR");
+				this.log("on.wserror");
 				this._.cb.wserror();
 			},
 			"error": function(message) {
-				CT.log("ERROR (non-fatal): " + message);
+				this.log("on.error", "(non-fatal)", message);
 				this._.cb.error(message);
 			},
 			"subscribe": function(data) {
-				CT.log("SUBSCRIBE " + JSON.stringify(data));
+				this.log("on.subscribe", data);
 				this._.cb.subscribe(data);
 			},
 			"join": function(channel, user) {
-				CT.log("JOIN " + channel + " " + user);
+				this.log("on.join", channel, user);
 				this._.cb.join(channel, user);
 			},
 			"leave": function(channel, user) {
-				CT.log("LEAVE " + channel + " " + user);
+				this.log("on.leave", channel, user);
 				this._.cb.leave(channel, user);
 			},
 			"message": function(data) {
-				CT.log("MESSAGE " + JSON.stringify(data));
+				this.log("on.message", data);
 				this._.cb.message(data);
 			},
 			"pm": function(data, user) {
-				CT.log("PM " + user + ": " + JSON.stringify(data));
+				this.log("on.pm", user, data);
 				this._.cb.pm(data, user);
 			}
 		}
 	},
-	"name": null,
 	"setCbs": function(cbs) {
 		this._.cb = CT.merge(cbs, this._.cb);
 	},
@@ -74,22 +74,22 @@ agent.Actor = CT.Class({
 		CT.pubsub.connect("localhost", 8888, this.name);
 	},
 	"join": function(channel) {
-		CT.log("JOIN " + channel);
+		this.log("join", channel);
 		CT.pubsub.subscribe(channel);
 	},
 	"emit": function(channel, action, data) {
-		CT.log("EMIT " + channel + ", " + action + ", " + data);
+		this.log("emit", channel, action, data);
 		CT.pubsub.publish(channel, {
 			"action": action,
 			"data": data
 		});
 	},
 	"say": function(channel, message) {
-		CT.log("SAY " + message);
+		this.log("say", channel, message);
 		this.emit(channel, "chat", message);
 	},
 	"pm": function(user, message) {
-		CT.log("PM " + user + " " + message);
+		this.log("pm", user, message);
 		CT.pubsub.pm(user, message);
 	}
-});
+}, core.Base);

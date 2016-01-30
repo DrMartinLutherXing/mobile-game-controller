@@ -13,6 +13,7 @@ var consts = {
 };
 
 lib.Card = CT.Class({
+	MOD_NAME: "lib.Card",
 	suit: "",
 	value: "",
 	rank: "",
@@ -31,9 +32,10 @@ lib.Card = CT.Class({
 			consts.values[Math.floor(Math.random() * consts.values.length)];
 		this.rank = this._getRank(v);
 	}
-});
+}, core.Base);
 
 lib.Deck = CT.Class({
+	MOD_NAME: "lib.Deck",
 	_deck: [],
 
 	_build: function() {
@@ -67,4 +69,4 @@ lib.Deck = CT.Class({
 		this._shuffle();
 
 	}
-});
+}, core.Base);

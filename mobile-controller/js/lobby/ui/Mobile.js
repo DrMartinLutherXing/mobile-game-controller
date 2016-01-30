@@ -1,4 +1,5 @@
 lobby.ui.Mobile = CT.Class({
+	"MOD_NAME": "lobby.ui.Mobile",
 	"_buttons": {},
 	"addButton": function(game) {
 		this._buttons[game] = CT.dom.button(game, function() {
@@ -10,16 +11,16 @@ lobby.ui.Mobile = CT.Class({
 		this.view.removeChild(this._buttons[game]);
 	},
 	"update": function(d) {
+		this.log("update", d);
 		if (d.user == "Concierge") { // system messages
 			if (d.message.action == "newgame")
 				this.addButton(d.message.data);
 			else if (d.message.action == "oldgame")
 				this.removeButton(d.message.data);
-		} else // regular channel messages
-			CT.log("message: " + d);
+		}
 	},
 	"init": function(obj) {
-		CT.log("lobby mobile init: " + this.gamelist);
+		this.log("init", obj);
 		this.gamelist = obj.gamelist;
 		for (var gtype in this.gamelist) {
 			this.view.appendChild(CT.dom.node(gtype, "div", "big"));

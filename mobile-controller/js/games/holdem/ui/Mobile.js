@@ -3,40 +3,37 @@ CT.require("lib.card");
 CT.require("lib.Deck");
 
 games.holdem.ui.Mobile = CT.Class({
+	"MOD_NAME": "games.holdem.ui.Mobile",
 	consts: games.holdem.constants,
 	_vars: {},
 	_responses: {
 		summary: function(s) {
-			this._log("_responses.summary", s);
+			this.log("_responses.summary", s);
 			this._vars.invested = 0;
 			this._setAnte(s.ante);
 			this._vars.cash = s.cash[this.acc_name];
 			this._setBlinds(s.blinds);
 		},
 		move: function(m) {
-			this._log("_responses.move", m);
+			this.log("_responses.move", m);
 			var g = this, move = m.split(" ").reverse(),
 				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0;
 			if (move[0] == "RAISE") g._vars.round_bid += cash;
-			CT.log("games.holdem.ui.Mobile._responses.move._vars: " + JSON.stringify(g._vars));
+			this.log("move", g._vars);
 		},
 		turn: function(t) {
-			this._log("_responses.turn", t);
+			this.log("_responses.turn", t);
 			if (t == this.acc_name)
 				this.account_name.classList.add("mymove");
 			else
 				this.account_name.classList.remove("mymove");
 		},
 		deal: function(d) {
-			this._log("_responses.deal", d);
+			this.log("_responses.deal", d);
 			var card = new lib.Card(d.suit, d.value);
 			this._cards.push(card);
 			//this["card_" + this._cards.length]._update(card.val());
 		}
-	},
-	_log: function(fname, data) {
-		CT.log("games.holdem.ui.Mobile(" + this.acc_name
-			+ ")." + fname + ": " + JSON.stringify(data));
 	},
 	_setCash: function(c) {
 		this._vars.cash = c || this._vars.cash;
@@ -162,20 +159,20 @@ games.holdem.ui.Mobile = CT.Class({
 		};
 	},
 	update: function(u) {
-		CT.log("games.holdem.ui.Mobile.update: " + JSON.stringify(u));
+		this.log("update", u);
 		var msg = u.message;
 		if (Object.keys(this._responses).indexOf(msg.action) != -1)
 			this._responses[msg.action](msg.data);
 		this._update();
 	},
 	load: function(obj) {
-		CT.log("games.holdem.ui.Mobile.load: " + JSON.stringify(obj));
+		this.log("load", obj);
 	},
 	join: function(user) {
-		CT.log("games.holdem.ui.Mobile.join: " + user);
+		this.log("join", user);
 	},
 	leave: function(user) {
-		CT.log("games.holdem.ui.Mobile.leave: " + user);
+		this.log("leave", user);
 	},
 	"moveCb": function(m) {
 		//needs checks for whether player has available money

@@ -1,4 +1,5 @@
 games.holdem.game = new CT.Class({
+	"MOD_NAME": "games.holdem.game",
 	"_data": {},
 	"_sequence": [
 		"preflop", "flop",
@@ -221,7 +222,7 @@ games.holdem.game = new CT.Class({
 		d[g._game_stage]();
 	},
 	"_handleUpdate": function(p, msg) {
-		CT.log("games.holdem.game._handleUpdate: " + p + JSON.stringify(msg));
+		this.log("_handleUpdate", p, msg);
 		var g = this, data, cash,
 			playerIndex = g._players.indexOf(p),
 			nextPlayerIndex = g._nextActivePlayerIndex(playerIndex);
@@ -326,7 +327,7 @@ games.holdem.game = new CT.Class({
 		g._resetRound();
 		if (g._numActive() == 1)
 			g._forEachActive(function(player) {
-				CT.log("winner: " + player);
+				this.log("winner", player);
 //				g._display.setWinner(player);
 			});
 		else {
@@ -338,32 +339,32 @@ games.holdem.game = new CT.Class({
 	},
 
 	"start": function() {
-		CT.log("games.holdem.game.start: " + arguments);
+		this.log("start", arguments);
 		this._start();
 	},
 	"init": function() {
-		CT.log("games.holdem.game.init: " + arguments);
+		this.log("init", arguments);
 		this._host = core.actor;
 	},
 	"load": function(obj) {
-		CT.log("games.holdem.game.load: " + JSON.stringify(obj));
+		this.log("load", obj);
 		this._players = obj.presence;
 		CT.data.remove(this._players, this._host.name);
 		this._build();
 	},
 	"update": function(obj) {
-		CT.log("games.holdem.game.update: " + JSON.stringify(obj));
+		this.log("update", obj);
 		this._handleUpdate(obj.user, obj.message);
 	},
 	"join": function(user) {
-		CT.log("games.holdem.game.join: " + user);
+		this.log("join", user);
 		if (user != this._host.name) {
 			this._players.push(user);
 			this._initPlayer(user);
 		}
 	},
 	"leave": function(user) {
-		CT.log("games.holdem.game.leave: " + user);
+		this.log("leave", user);
 		this._players.splice(this._player.indexOf(user), 1);
 	}
-});
+}, core.Base);
