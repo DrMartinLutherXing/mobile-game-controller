@@ -233,7 +233,42 @@ lib.Rank = CT.Class({
 					rank._.suits[card.suit].push(card);
 				else rank._.suits[card.suit] = [card];
 		});
-
+	},
+	"compare": function(r) {
+		var r1, r2, _r1 = [], _r2 = [], s1, s2, v1, v2,
+			order = ["STRAIGHT_FLUSH", "4KIND", "HOUSE", "FLUSH", "STRAIGHT", "2PAIR",
+			"2KIND", "1KIND"];
+		this._best(); r._best();
+		r1 = this._string;
+		r2 = r._string;
+		order.forEach(function(r) {
+				_r1.push(r1.indexOf(r));
+				_r2.push(r2.indexOf(r));
+			});
+		for (var i = 0; i < _r1.length; ++i) {
+			if (_r1[i] > _r2[i]) return 1;
+			else if (_r2[i] > _r1[i]) return -1;
+			else if (_r1[i] == _r2[i] && _r1[i] != -1) {
+				s1 = r1.substr(r1.indexOf(order[i]) + order[i].length);
+				s1 = r2.substr(r2.indexOf(order[i]) + order[i].length);
+				for (var j = 0; j < s1.length; ++j) {
+					v1 = this._cards[0]._getRank(s1[j]);
+					v2 = this._cards[0]._getRank(s2[j]);
+					if (v1 > v2) return 1;
+					if (v2 > v1) return -1;
+				}
+				if (s1.indexOf("1KIND") > -1) {
+					s1 = s1.substr(s1.indexOf("1KIND")+5);
+					s2 = s1.substr(s1.indexOf("1KIND")+5);
+					for (var j = 0; j < s1.length; ++j) {
+						v1 = this._cards[0]._getRank(s1[j]);
+						v2 = this._cards[0]._getRank(s2[j]);
+						if (v1 > v2) return 1;
+						if (v2 > v1) return -1;
+					}
+				}else return 0;
+			}
+		}
 	},
 	"init": function(cards, available) {
 		this._cards = cards.slice();
