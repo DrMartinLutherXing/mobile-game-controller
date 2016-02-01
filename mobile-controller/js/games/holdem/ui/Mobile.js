@@ -68,7 +68,7 @@ games.holdem.ui.Mobile = CT.Class({
 		}
 		this._vars.btn = btn;
 		this._vars.invested += blind;
-		this._vars.cash -= blind;
+		//this._vars.cash -= blind;
 		this._vars.current_bid = blind;
 		//this.table_btn._update(btn);
 	},
@@ -193,7 +193,7 @@ games.holdem.ui.Mobile = CT.Class({
 						that._vars.cash -= toCall;
 					}
 				}else if (m == "RAISE") {
-					move = "$" + toRaise + " " + m;
+					move = "$" + that._vars.next_bid + " " + m;
 					//that._vars.round_bid += that._vars.next_bid;
 					that._vars.invested += toRaise;
 					that._vars.current_bid += toRaise;
