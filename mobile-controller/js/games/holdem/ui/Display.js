@@ -1,3 +1,4 @@
+CT.require("games.holdem.ui.Bot");
 CT.require("games.holdem.ui.Mobile");
 
 games.holdem.ui.Display = CT.Class({
@@ -87,12 +88,18 @@ games.holdem.ui.Display = CT.Class({
 		var pnode = CT.dom.node();
 		pnode.isPlayerNode = true;
 		this.players.appendChild(pnode);
-		this._players[user] = new games.holdem.ui.Mobile(pnode, user);
+		for (var p in this._players)
+			this._players[p].join(user);
+		this._players[user] = new games.holdem.ui[
+			user.slice(0, 5) == "host_" ? "Bot"
+			: "Mobile"](pnode, user);
 	},
 	leave: function(user) {
 		this.log("leave", user);
 		this.players.removeChild(this._players[user].view);
 		delete this._players[user];
+		for (var p in this._players)
+			this._players[p].leave(user);
 	},
 	init: function(obj) {
 		this.view.classList.add("display-background");
