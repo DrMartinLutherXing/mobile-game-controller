@@ -1,13 +1,16 @@
 games.holdem.ui.Bot = CT.Class({
 	"MOD_NAME": "games.holdem.ui.Bot",
 	"_say": function(msg) {
-		CT.dom.getDoc(this.iframe).postMessage(msg, "*");
+		if (core.config.botheads)
+			CT.dom.getDoc(this.iframe).postMessage(msg, "*");
 	},
 	"init": function(view) {
 		this.view = view;
-		this.iframe = CT.dom.iframe("http://45.79.138.63:8082/game0.html",
-			"minibot");
-		this.view.appendChild(this.iframe);
+		if (core.config.botheads) {
+			this.iframe = CT.dom.iframe("http://45.79.138.63:8082/game0.html",
+				"minibot");
+			this.view.appendChild(this.iframe);
+		}
 	},
 	"leave": function(user) {
 		this._say(user + " leaves the table");

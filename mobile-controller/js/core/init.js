@@ -1,4 +1,5 @@
 CT.require("CT.all");
+CT.require("core.config");
 CT.require("core.ui");
 CT.require("games.game");
 
