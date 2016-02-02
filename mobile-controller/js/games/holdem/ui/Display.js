@@ -3,6 +3,7 @@ CT.require("games.holdem.ui.Mobile");
 games.holdem.ui.Display = CT.Class({
 	"MOD_NAME": "games.holdem.ui.Display",
 	consts: games.holdem.constants,
+	_players: {},
 	_buildCard: function() {
 		var cards = [];
 		while (cards.length < 5)
@@ -102,9 +103,6 @@ games.holdem.ui.Display = CT.Class({
 		this.start_button = CT.dom.button("START", this._start);
 		this.players = CT.dom.node("", "div", "right downshift bordered padded");
 		this._build();
-
-		// init player instances
-		this._players = {};
 		obj.presence.forEach(this.join);
 	}
 }, core.UI);

@@ -371,7 +371,7 @@ games.holdem.game = new CT.Class({
 	},
 	"load": function(obj) {
 		this.log("load", obj);
-		this._players = obj.presence;
+		this._players = obj.presence.slice();
 		CT.data.remove(this._players, this._host.name);
 		this._build();
 	},
