@@ -14,7 +14,14 @@ lib.Rank = CT.Class({
 								});
 						});
 				});
-			//sort straightFlushs;
+			//fixes reordering by flush check;
+			straightFlushs = straightFlushs.map(function(straightFlush) {
+				if (straightFlush._cards[0].value == "A" &&
+						straightFlush._cards[1].value == "5")
+					straightFlush._cards.push(straightFlush._cards.shift());
+				return straightFlush;
+			});
+			//straightFlushs should be sorted properly from STRAIGHT call;
 			return straightFlushs;
 		},
 		"KIND": function(num) {
@@ -65,7 +72,7 @@ lib.Rank = CT.Class({
 		},
 		"STRAIGHT": function() {
 			var rank = this, index = 0, straight, newStraight,
-				straights = [[]], returnStraights = [], straightIndex, 
+				straights = [[]], returnStraights = [], straightIndex,
 				cardsLength = this._cards.length, card, lastCard,
 				lastValue, lastRank, currentCard, currentRank,
 				findStraights  = function(low) {
@@ -120,17 +127,18 @@ lib.Rank = CT.Class({
 				var aFirstCard = a._cards[0], aSecondCard = a._cards[1],
 					bFirstCard = b._cards[0], bSecondCard = b._cards[1],
 					aRank = aFirstCard.rank, bRank = bFirstCard.rank;
-					if (aFirstCard.value == "A") {
+					if (aFirstCard.value == "A" && aSecondCard.value == "5")
 						aRank = aSecondCard.rank;
-						a._cards.push(a._cards.shift());
-					}
-					if (bFirstCard.value == "A") {
+					if (bFirstCard.value == "A" && bSecondCard.value == "5")
 						bRank = bSecondCard.rank;
-						b._cards.push(b._cards.shift());
-					}
 				return bRank - aRank;
 			});
-
+			returnStraights = returnStraights.map(function(straightRank) {
+				if (straightRank._cards[0].value == "A" &&
+						straightRank._cards[1].value == "5")
+					straightRank._cards.push(straightRank._cards.shift());
+				return straightRank;
+			});
 			return returnStraights;
 		},
 		"2PAIR": function() {
@@ -295,7 +303,7 @@ lib.Rank = CT.Class({
 	},
 	"init": function(cards, available) {
 		this._cards = cards.slice();
-		this._available = available || 0; 
+		this._available = available || 0;
 		this._build();
 	}
 }, core.Base);
@@ -312,13 +320,10 @@ lib.Rank._test = function() {
 	["6", "9", "8", "7", "T"].forEach(function(v, index) {
 		cards.push(new lib.Card(suits[index % 4], v));
 	});
-	TEST2 = new lib.Rank(cards);
-	console.log(TEST2);
-	TEST2._best();
-	console.log(TEST2);
-	*/
+	TEST = new lib.Rank(cards, 5);
+	TEST._best();
+	console.log(TEST);
 
-	/*
 	// STRAIGHT_FLUSHA FROM 5
 	cards = [];
 	["T", "J", "Q", "K", "A"].forEach(function(v) {
@@ -338,7 +343,6 @@ lib.Rank._test = function() {
 		], 5);
 	TEST._best();
 	console.log(TEST);
-*/
 
 	// HOUSE3K FROM 5
 	TEST = new lib.Rank([
@@ -351,7 +355,6 @@ lib.Rank._test = function() {
 	TEST._best();
 	console.log(TEST);
 
-/*
 	// STRAIGHT7 FROM 7
 	["A", "2","3", "4", "5", "6", "7"].forEach(function(v, index) {
 		cards.push(new lib.Card(suits[index % 4], v));
@@ -430,7 +433,6 @@ lib.Rank._test = function() {
 	TEST._best();
 	console.log(TEST._string);
 
-	*/
 	// 2KINDK1KINDAQT FROM 7
 	TEST2 = new lib.Rank([
 			new lib.Card("diamond", "K"),
@@ -440,6 +442,44 @@ lib.Rank._test = function() {
 			new lib.Card("spade", "2"),
 			new lib.Card("heart", "3"),
 			new lib.Card("spade", "A")
+		], 5);
+	TEST2._best();
+	console.log(TEST2._string);
+	// STRAIGHT5 FROM 7
+	TEST2 = new lib.Rank([
+			new lib.Card("diamond", "K"),
+			new lib.Card("spade", "5"),
+			new lib.Card("diamond", "4"),
+			new lib.Card("heart", "3"),
+			new lib.Card("spade", "2"),
+			new lib.Card("heart", "Q"),
+			new lib.Card("spade", "A")
+		], 5);
+	TEST2._best();
+	console.log(TEST2);
+	*/
+	// FLUSHAKQ53 FROM 7
+	TEST = new lib.Rank([
+			new lib.Card("heart", "4"),
+			new lib.Card("spade", "5"),
+			new lib.Card("spade", "Q"),
+			new lib.Card("spade", "K"),
+			new lib.Card("spade", "2"),
+			new lib.Card("spade", "3"),
+			new lib.Card("spade", "A")
+		], 5);
+	TEST._best();
+	console.log(TEST._string);
+
+	// FLUSHKQ532 FROM 7
+	TEST2 = new lib.Rank([
+			new lib.Card("heart", "4"),
+			new lib.Card("spade", "5"),
+			new lib.Card("spade", "Q"),
+			new lib.Card("spade", "K"),
+			new lib.Card("spade", "2"),
+			new lib.Card("spade", "3"),
+			new lib.Card("club", "A")
 		], 5);
 	TEST2._best();
 	console.log(TEST2._string);
