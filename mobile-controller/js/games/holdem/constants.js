@@ -5,14 +5,17 @@ games.holdem.constants = {
 	"card": {
 		"dims": {
 			"svg": {
-				"xStart": 4109,
+				"xStart": 4109.0,
 				"xPadding": 41.80,
-				"yStart": 2291,
+				"yStart": 2291.0,
 				"yPadding": 41.33,
-				"width": 239,
-				"height": 334,
-				"imageWidth": 4608,
-				"imageHeight": 3456
+				"width": 239.0,
+				"height": 334.0,
+				"imageWidth": 4608.0,
+				"imageHeight": 3456.0
+			},
+			"png": {
+				"imageWidth": 600.0
 			},
 		},
 		"suit": [
@@ -28,6 +31,12 @@ games.holdem.constants = {
 		]
 	}
 };
+var i, d = games.holdem.constants.card.dims,
+	pngR = d.svg.imageWidth / d.png.imageWidth;
+for (i in d.svg)
+	if (i != "imageWidth")
+		d.png[i] = d.svg[i] / pngR;
+
 games.holdem.initial = {
 	"table_btn": "dealer",
 	"account_name": "kieran",
