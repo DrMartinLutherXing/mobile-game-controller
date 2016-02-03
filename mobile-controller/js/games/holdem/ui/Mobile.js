@@ -13,6 +13,7 @@ games.holdem.ui.Mobile = CT.Class({
 			this._setAnte(s.ante);
 			this._vars.cash = s.cash[this.acc_name];
 			this._setBlinds(s.blinds);
+			this._resetCards();
 		},
 		move: function(m) {
 			this.log("_responses.move", m);
@@ -107,6 +108,13 @@ games.holdem.ui.Mobile = CT.Class({
 			]));
 		}
 		this._updates();
+	},
+	"_resetCards": function() {
+		this._cards = [
+			new lib.Card(),
+			new lib.Card()
+		];
+		this._update();
 	},
 	_updates: function() {
 		var that = this, _updates = {
