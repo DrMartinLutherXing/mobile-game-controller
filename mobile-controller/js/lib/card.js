@@ -2,8 +2,8 @@ CT.require("core.ui");
 lib.card = {
 	"setCardImage": function(node, card, imageType) {
 		var CONST = core.ui._ui.consts.card,
-			t = imageType || "svg",
-			dims = CONST.dims[t],
+			tp = imageType || "svg",
+			dims = CONST.dims[tp],
 			strLength = card.length,
 			suit = card.substr(0, strLength-1),
 			suitIndex = CONST.suit.indexOf(suit),
@@ -20,7 +20,7 @@ lib.card = {
 			t = scale * (y - suitIndex * (h + yp)),
 			l = scale * (x - valueIndex * (w + xp));
 		
-		nodeStyle["background-image"] = "url(/img/Color_52_Faces_v.2.0.svg)";
+		nodeStyle["background-image"] = "url(/img/Color_52_Faces_v.2.0." + tp + ")";
 		nodeStyle["background-size"] = (dims.imageWidth * scale) + "px " +
 			(dims.imageHeight * scale) + "px";
 		nodeStyle["background-position"] = l + "px " + t + "px";
