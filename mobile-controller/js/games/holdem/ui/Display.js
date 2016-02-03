@@ -59,14 +59,23 @@ games.holdem.ui.Display = CT.Class({
 		this._cards.push(card);
 		this.card[this._cards.length-1]._update(card.val());
 	},
+	_resetCards: function() {
+		this._cards = [];
+		this.card.forEach(function(c) {
+			c._update("");
+		});
+	},
 	update: function(u) {
 		this.log("update", u);
 		var msg = u.message;
 		if (msg.action == "flip")
 			this._flip(msg.data);
-		else
+		else {
+			if (msg.action == "summary")
+				this._resetCards();
 			for (var p in this._players)
 				this._players[p].update(u);
+		}
 			/*
 		}
 		for (var value in u) {
