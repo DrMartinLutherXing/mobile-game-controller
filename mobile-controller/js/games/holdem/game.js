@@ -116,8 +116,8 @@ games.holdem.game = new CT.Class({
 		g._buildPot();
 		g._round_bid = 100 * Math.pow(2, Math.floor(blindIncs));
 	},
-	"_updatePlayerCash": function() {
-		
+	"_updatePlayerCash": function(pid, cash) {
+		this._data[pid].cash += cash;
 	},
 	"_distributePot": function(winners) {
 		var g = this, potTotal = 0, splitTotal,
@@ -151,7 +151,7 @@ games.holdem.game = new CT.Class({
 		});
 		for (var pid in g._pot) {
 			if (winners.indexOf(pid) != -1)
-				updateValue = winnerTotals[wpid];
+				updateValue = winnerTotals[pid];
 			else if (g._pot[pid] > 0)
 				updateValue = g._pot[pid];
 			else
@@ -242,7 +242,7 @@ games.holdem.game = new CT.Class({
 			return this.start();
 		if (msg.action == "move" && playerIndex == g._activeIndex) {
 			data = msg.data.split(" ").reverse();
-			cash = data.length > 1 ? parseInt(data[1]) : 0;
+			cash = data.length > 1 ? parseInt(data[1].substr(1)) : 0;
 			switch (data[0]) {
 				case "RAISE":
 					g._bid_start_index = playerIndex;
@@ -262,10 +262,10 @@ games.holdem.game = new CT.Class({
 				default:
 					break;
 			}
+			g._activeIndex = nextPlayerIndex;
+			if (nextPlayerIndex == g._bid_start_index) g._run();
+			else g._host.turn(g._players[g._activeIndex]);
 		}
-		g._activeIndex = nextPlayerIndex;
-		if (nextPlayerIndex == g._bid_start_index) g._run();
-		else g._host.turn(g._players[g._activeIndex]);
 	},
 	"_summary": function() {
 		var that = this, summary = {};
@@ -290,9 +290,9 @@ games.holdem.game = new CT.Class({
 					g._bid_start_index = startIndex;
 					g._activeIndex = startIndex;
 				}else if (actives == 2) {
-					g._host.turn(g._players[bigIndex]);
-					g._bid_start_index = bigIndex;
-					g._activeIndex = bigIndex;
+					g._host.turn(g._players[g._dealer_index]);
+					g._bid_start_index = g._dealer_index;
+					g._activeIndex = g._dealer_index;
 				}
 			},
 			"flop": function() {
