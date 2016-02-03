@@ -69,9 +69,8 @@ agent.Actor = CT.Class({
 		setTimeout(this.postInit);
 	},
 	"postInit": function() {
-		// TODO: configurize later
-		CT.pubsub.set_reconnect(false);
-		CT.pubsub.connect("localhost", 8888, this.name);
+		CT.pubsub.set_reconnect(core.config.ws.reconnect);
+		CT.pubsub.connect(core.config.ws.host, core.config.ws.port, this.name);
 	},
 	"join": function(channel) {
 		this.log("join", channel);

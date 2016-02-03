@@ -1,3 +1,8 @@
 core.config = {
-	"botheads": false
+	"botheads": true,
+	"ws": {
+		"host": "localhost",
+		"port": 8888,
+		"reconnect": false
+	}
 };
