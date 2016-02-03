@@ -17,7 +17,7 @@ core.ui = {
 	"_uis": [],
 	"_ui": null,
 	"view": null,
-	"platform": CT.align.width() < 720 ? "Mobile" : "Display",
+	"platform": CT.info.mobile || CT.align.width() < 720 ? "Mobile" : "Display",
 	"setView": function(view) {
 		core.ui.view = view;
 	},
