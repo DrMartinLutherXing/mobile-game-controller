@@ -32,8 +32,10 @@ games.holdem.ui.Mobile = CT.Class({
 		deal: function(d) {
 			this.log("_responses.deal", d);
 			var card = new lib.Card(d.suit, d.value);
-			this._cards.push(card);
-			//this["card_" + this._cards.length]._update(card.val());
+			if (!this.card_1._card)
+				this.card_1._card = card;
+			else if (!this.card_2._card)
+				this.card_2._card = card;
 		}
 	},
 	_setCash: function(c) {
@@ -76,7 +78,6 @@ games.holdem.ui.Mobile = CT.Class({
 	_fold: function() {
 	},
 	_build: function() {
-		this._cards = [];
 		if (this.view.isPlayerNode) {
 			this.view.appendChild(CT.dom.wrapped([
 				this.account_name,
@@ -110,10 +111,8 @@ games.holdem.ui.Mobile = CT.Class({
 		this._updates();
 	},
 	"_resetCards": function() {
-		this._cards = [
-			new lib.Card(),
-			new lib.Card()
-		];
+		this.card_1._card = null;
+		this.card_2._card = null;
 		this._update();
 	},
 	_updates: function() {
@@ -129,12 +128,12 @@ games.holdem.ui.Mobile = CT.Class({
 				that.current_bid.innerHTML = "$" + that._vars.current_bid;
 			},
 			"card_1": function() {
-				if (that._cards.length == 2)
-					lib.card.setCardImage(that.card_1, that._cards[0].val());
+				if (that.card_1._card)
+					lib.card.setCardImage(that.card_1, that.card_1._card.val());
 			},
 			"card_2": function() {
-				if (that._cards.length == 2)
-					lib.card.setCardImage(that.card_2, that._cards[1].val());
+				if (that.card_2._card)
+					lib.card.setCardImage(that.card_2, that.card_2._card.val());
 			},
 			"current_money": function() {
 				that.current_money.innerHTML = "$" + that._vars.cash;
