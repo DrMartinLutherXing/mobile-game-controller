@@ -4,6 +4,34 @@ CT.require("games.holdem.ui.Mobile");
 games.holdem.ui.Display = CT.Class({
 	"MOD_NAME": "games.holdem.ui.Display",
 	consts: games.holdem.constants,
+	_responses: {
+		summary: function(u) {
+			this.log("_responses.summary", u);
+			this._resetCards();
+		},
+		move: function(u) {
+			this.log("_responses.move", u);
+		},
+		turn: function(u) {
+			this.log("_responses.turn", u);
+		},
+		flip: function(u) {
+			this.log("_responses.flip", u);
+			var f = u.message.data, index = 0;
+			for (;index < 5; ++index) {
+				if (!this.cards[index]._card) {
+					this.cards[index]._card = new lib.Card(f.suit, f.value);
+					break;
+				}
+			}
+		},
+		deal: function(u) {
+			this.log("_responses.deal", u);
+		},
+		stage: function(u) {
+			this.log("_responses.stage", u);
+		}
+	},
 	_players: {},
 	_buildVars: function() {
 		this._vars = {
@@ -59,14 +87,9 @@ games.holdem.ui.Display = CT.Class({
 				lib.card.setCardImage(c, "");
 		});
 	},
-	_flip: function(c) {
-		var index = 0;
-		for (;index < 5; ++index) {
-			if (!this.cards[index]._card) {
-				this.cards[index]._card = new lib.Card(c.suit, c.value);
-				break;
-			}
-		}
+	_updatePlayers: function(u) {
+		for (var p in this._players)
+			this._players[p].update(u);
 	},
 	_resetCards: function() {
 		this.cards.forEach(function(c) {
@@ -76,15 +99,10 @@ games.holdem.ui.Display = CT.Class({
 	update: function(u) {
 		this.log("update", u);
 		var msg = u.message;
-		if (msg.action == "flip")
-			this._flip(msg.data);
-		else {
-			if (msg.action == "summary")
-				this._resetCards();
-			for (var p in this._players)
-				this._players[p].update(u);
-		}
+		if (msg.action in this._responses)
+			this._responses[msg.action](u);
 		this._update();
+		this._updatePlayers(u);
 	},
 	_start: function() {
 		this.start_button.parentNode.removeChild(this.start_button);
