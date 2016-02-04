@@ -5,11 +5,19 @@ games.holdem.ui.Display = CT.Class({
 	"MOD_NAME": "games.holdem.ui.Display",
 	consts: games.holdem.constants,
 	_players: {},
-	_buildCard: function() {
+	_buildVars: function() {
+		this._vars = {
+			"game_stage": "",
+			"pot_total": "",
+			"round_total": "",
+			"hand_number": ""
+		};
+	},
+	_buildCards: function() {
 		var cards = [];
 		while (cards.length < 5)
 			cards.push(CT.dom.node("", "div", "d-holdem_card"));
-		this.card = cards;
+		this.cards = cards;
 	},
 	_buildText: function(d) {
 		var text = Object.keys(d)[0];
@@ -19,8 +27,8 @@ games.holdem.ui.Display = CT.Class({
 			], "div", "d-holdem_textwrap");
 	},
 	_build: function() {
-		this._cards = [];
-		this._buildCard();
+		this._buildVars();
+		this._buildCards();
 		this.view.appendChild(CT.dom.wrapped([
 			this.players,
 			CT.dom.wrapped([
@@ -34,35 +42,35 @@ games.holdem.ui.Display = CT.Class({
 			], "div", "d-holdem_left"),
 			CT.dom.wrapped([
 				this.game_stage,
-				CT.dom.wrapped(this.card, "div", "d-holdem_cards")
+				CT.dom.wrapped(this.cards, "div", "d-holdem_cards")
 			], "div", "d-holdem_right")
 		]));
-		this._updates();
 	},
-	_updates: function() {
+	_update: function() {
 		var that = this;
-		["game_stage", "pot_total", "round_total",
-			"hand_number"].forEach(function(o) {
-				that[o]._update = function(val) {
-					that[o].innerHTML = val;
-				}
-			});
-
-		this.card.forEach(function(c) {
-			c._update = function(cval) {
-				lib.card.setCardImage(c, cval);
-			};
+		that.game_stage.innerHTML = that._vars.game_stage;
+		that.pot_total.innerHTML = that._vars.pot_total;
+		that.round_total.innerHTML = that._vars.round_total;
+		that.hand_number.innerHTML = that._vars.hand_number;
+		this.cards.forEach(function(c) {
+			if (c._card)
+				lib.card.setCardImage(c, c._card.val());
+			else
+				lib.card.setCardImage(c, "");
 		});
 	},
 	_flip: function(c) {
-		var card = new lib.Card(c.suit, c.value);
-		this._cards.push(card);
-		this.card[this._cards.length-1]._update(card.val());
+		var index = 0;
+		for (;index < 5; ++index) {
+			if (!this.cards[index]._card) {
+				this.cards[index]._card = new lib.Card(c.suit, c.value);
+				break;
+			}
+		}
 	},
 	_resetCards: function() {
-		this._cards = [];
-		this.card.forEach(function(c) {
-			c._update("");
+		this.cards.forEach(function(c) {
+			c._card = null;
 		});
 	},
 	update: function(u) {
@@ -76,17 +84,7 @@ games.holdem.ui.Display = CT.Class({
 			for (var p in this._players)
 				this._players[p].update(u);
 		}
-			/*
-		}
-		for (var value in u) {
-			if (value in this)
-				this[value]._update && this[value]._update(u[value]);
-			else if (value.indexOf("card") != -1) {
-				update = this.card[value[value.length-1]];
-				update._update && update._update(u[value]);
-			}
-		}
-		*/
+		this._update();
 	},
 	_start: function() {
 		this.start_button.parentNode.removeChild(this.start_button);
