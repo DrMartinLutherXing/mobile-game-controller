@@ -7,31 +7,58 @@ games.holdem.ui.Mobile = CT.Class({
 	consts: games.holdem.constants,
 	_vars: {},
 	_responses: {
-		summary: function(s) {
-			this.log("_responses.summary", s);
+		summary: function(u) {
+			this.log("_responses.summary", u);
+			var s = u.message.data;
 			this._vars.invested = 0;
 			this._setAnte(s.ante);
 			this._vars.cash = s.cash[this.acc_name];
 			this._setBlinds(s.blinds);
 			this._resetCards();
 		},
-		move: function(m) {
-			this.log("_responses.move", m);
-			var g = this, move = m.split(" ").reverse(),
-				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0;
-			if (move[0] == "RAISE") g._vars.round_bid += cash;
-			this.log("move", g._vars);
+		move: function(u) {
+			this.log("_responses.move", u);
+			var g = this, m = u.message.data,
+				toCall = g._vars.round_bid - g._vars.invested,
+				toRaise = toCall + g._vars.next_bid,
+				move = m.split(" ").reverse(),
+				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0,
+				moves = {
+					"RAISE": function() {
+						g._vars.round_bid += cash;
+						if (u.user == g.acc_name) {
+							g._vars.invested += toRaise;
+							g._vars.current_bid += toRaise;
+							g._vars.cash -= toRaise;
+						}
+					},
+					"CALL": function() {
+						if (u.user == g.acc_name) {
+							g._vars.invested += toCall;
+							g._vars.current_bid += toCall;
+							g._vars.cash -= toCall;
+						}
+					},
+					"CHECK": function() {
+					},
+					"FOLD": function() {
+					},
+				};
+			if (move[0] in moves)
+				moves[move[0]]();
 		},
-		turn: function(t) {
-			this.log("_responses.turn", t);
+		turn: function(u) {
+			this.log("_responses.turn", u);
+			var t = u.message.data;
 			if (t == this.acc_name)
 				this.account_name.classList.add("mymove");
 			else
 				this.account_name.classList.remove("mymove");
 		},
-		deal: function(d) {
-			this.log("_responses.deal", d);
-			var card = new lib.Card(d.suit, d.value);
+		deal: function(u) {
+			this.log("_responses.deal", u);
+			var d = u.message.data,
+				card = new lib.Card(d.suit, d.value);
 			if (!this.card_1._card)
 				this.card_1._card = card;
 			else if (!this.card_2._card)
@@ -160,7 +187,6 @@ games.holdem.ui.Mobile = CT.Class({
 			}
 		};
 		this._update = function() {
-			//this[u]._update = _updates[u];
 			for (var u in _updates)
 				_updates[u]();
 		};
@@ -168,8 +194,8 @@ games.holdem.ui.Mobile = CT.Class({
 	update: function(u) {
 		this.log("update", u);
 		var msg = u.message;
-		if (Object.keys(this._responses).indexOf(msg.action) != -1)
-			this._responses[msg.action](msg.data);
+		if (msg.action in this._responses)
+			this._responses[msg.action](u);
 		this._update();
 	},
 	load: function(obj) {
@@ -187,35 +213,16 @@ games.holdem.ui.Mobile = CT.Class({
 			buttonCb = function() {
 				var move,
 					toCall = that._vars.round_bid - that._vars.invested,
-					toRaise = toCall + that._vars.next_bid,
 					toAll = that._vars.cash - toCall;
-				if (m == "CALL") {
-					if (toCall == 0)
-						move = "CHECK";
-					else if (toCall > 0) {
-						move = "$" + toCall + " " + m;
-						//that._vars.round_bid += toCall;
-						that._vars.invested += toCall;
-						that._vars.current_bid += toCall;
-						that._vars.cash -= toCall;
-					}
-				}else if (m == "RAISE") {
+				if (m == "CALL")
+					move = "$" + toCall + " " + m;
+				else if (m == "RAISE")
 					move = "$" + that._vars.next_bid + " " + m;
-					//that._vars.round_bid += that._vars.next_bid;
-					that._vars.invested += toRaise;
-					that._vars.current_bid += toRaise;
-					that._vars.cash -= toRaise;
-				}else if (m == "ALL-IN") {
+				else if (m == "ALL-IN")
 					move = "$" + toAll  + " RAISE";
-					that._vars.round_bid += toAll;
-					that._vars.invested += that._vars.cash;
-					that._vars.current_bid += that._vars.cash;
-					that._vars.cash = 0;
-				}else {
+				else
 					move = m;
-					that._fold();
-				}
-				that._update();
+				//that._update();
 				core.actor.emit(that.name, "move", move);
 			};
 		return buttonCb;
