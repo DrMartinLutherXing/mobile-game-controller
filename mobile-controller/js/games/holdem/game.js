@@ -47,9 +47,9 @@ games.holdem.game = new CT.Class({
 	},
 	"_nextActivePlayerIndex": function(startIndex) {
 		var g = this,
-			playerCount = g._players.length,
-			playerIndex =
-				((startIndex || g._dealer_index) + 1) % playerCount,
+			playerCount = g._players.length, playerIndex = g._dealer_index;
+			if (Number.isInteger(startIndex)) playerIndex = startIndex;
+			playerIndex = (playerIndex + 1) % playerCount;
 			player = g._players[playerIndex];
 			if (g._data[player].stat != "active")
 				g._nextActivePlayerIndex(playerIndex);
@@ -330,8 +330,8 @@ games.holdem.game = new CT.Class({
 			}
 		};
 		if (g._numActive() < 2)
-			return g.run();
-		g._round_bid = 0;//questionable maybe...
+			return g._run();
+		//g._round_bid = 0;//questionable maybe...
 		b[g._game_stage]();
 	},
 	"_run": function() {
