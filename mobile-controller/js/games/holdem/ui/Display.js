@@ -10,6 +10,7 @@ games.holdem.ui.Display = CT.Class({
 			var s = u.message.data;
 			this._vars.table_bid = s.ante;
 			this._vars.hand_number = s.hand_number;
+			this._vars.pot_total = 0;
 			this._vars.round_total = s.starting_pot;
 			this._resetCards();
 		},
@@ -51,8 +52,10 @@ games.holdem.ui.Display = CT.Class({
 		stage: function(u) {
 			this.log("_responses.stage", u);
 			var s = u.message.data;
-			this._vars.pot_total += this._vars.round_total;
-			this._vars.round_total = 0;
+			if (s.game_stage != "preflop") {
+				this._vars.pot_total += this._vars.round_total;
+				this._vars.round_total = 0;
+			}
 			this._vars.game_stage = s.game_stage;
 		}
 	},
