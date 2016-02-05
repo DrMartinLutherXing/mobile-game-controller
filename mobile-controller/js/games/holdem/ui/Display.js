@@ -7,10 +7,30 @@ games.holdem.ui.Display = CT.Class({
 	_responses: {
 		summary: function(u) {
 			this.log("_responses.summary", u);
+			var s = u.message.data;
+			this._vars.table_bid = s.ante;
+			this._vars.hand_number = s.hand_number;
+			this._vars.round_total = s.starting_pot;
 			this._resetCards();
 		},
 		move: function(u) {
 			this.log("_responses.move", u);
+			var m = u.message.data, data = m.move.split(" ").reverse(),
+				cash = data.length > 1 ? parseInt(data[1].substr(1)) : 0;
+			//incorporate case for player cash less than table_bid
+			//needs to use minimum of the players cash and the table_bid
+			switch (data[0]) {
+				case "RAISE":
+					this._vars.table_bid += cash;
+					this._vars.round_total +=
+						(this._vars.table_bid - m.invested);
+					break;
+				case "CALL":
+					this._vars.round_total += cash;
+					break;
+				default:
+					break;
+			}
 		},
 		turn: function(u) {
 			this.log("_responses.turn", u);
@@ -30,15 +50,20 @@ games.holdem.ui.Display = CT.Class({
 		},
 		stage: function(u) {
 			this.log("_responses.stage", u);
+			var s = u.message.data;
+			this._vars.pot_total += this._vars.round_total;
+			this._vars.round_total = 0;
+			this._vars.game_stage = s.game_stage;
 		}
 	},
 	_players: {},
 	_buildVars: function() {
 		this._vars = {
 			"game_stage": "",
-			"pot_total": "",
-			"round_total": "",
-			"hand_number": ""
+			"pot_total": 0,
+			"round_total": 0,
+			"table_bid": 0,
+			"hand_number": 0
 		};
 	},
 	_buildCards: function() {
