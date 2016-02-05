@@ -54,12 +54,15 @@ games.holdem.ui.Mobile = CT.Class({
 				this.account_name.classList.add("mymove");
 				this.timer.set(core.config.timeout);
 				this.timer.start();
+				this._setRange();
 				CT.dom.show(this.timer);
+				CT.dom.show(this.bid_slider);
 			}
 			else {
 				this.account_name.classList.remove("mymove");
 				this.timer.stop();
 				CT.dom.hide(this.timer);
+				CT.dom.hide(this.bid_slider);
 			}
 		},
 		stage: function(u) {
@@ -75,12 +78,21 @@ games.holdem.ui.Mobile = CT.Class({
 				this.card_2._card = card;
 		}
 	},
+	_setRange: function() {
+		this.bid_slider.innerHTML = "";
+		this.bid_slider.appendChild(CT.dom.range(this._setNextBid,
+			this._vars.current_bid, this._vars.cash, this._vars.current_bid, 100));
+	},
 	_setCash: function(c) {
 		this._vars.cash = c || this._vars.cash;
 		//this.current_money._update(this._cash);
 	},
 	_setCurrentBid: function(c) {
 		this._vars.current_bid = c || 0;
+	},
+	_setNextBid: function(c) {
+		this._vars.next_bid = c || 0;
+		this._update();
 	},
 	_setAnte: function(a) {
 		this._vars.ante = this._vars.round_bid = this._vars.next_bid = a;
@@ -141,7 +153,7 @@ games.holdem.ui.Mobile = CT.Class({
 					CT.dom.wrapped([
 						this.next_bid,
 						this.allin_button]),
-					//this.bid_slider,
+					this.bid_slider,
 					this.raise_button,
 					this.call_button,
 					this.fold_button
@@ -262,7 +274,7 @@ games.holdem.ui.Mobile = CT.Class({
 
 		this.allin_button = CT.dom.button("ALL-IN",
 			this.moveCb("ALL-IN"), "m-holdem_allin_button");
-		//bid_slider: CT.dom.node(),
+		this.bid_slider = CT.dom.node(),
 		this.raise_button = CT.dom.button("$100 RAISE",
 			this.moveCb("RAISE"), "m-holdem_button raise");
 		this.call_button = CT.dom.button("$100 CALL",
