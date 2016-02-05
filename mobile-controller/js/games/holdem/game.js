@@ -63,6 +63,7 @@ games.holdem.game = new CT.Class({
 		var actives = this._numActive(),
 			smallIndex =  this._nextActivePlayerIndex(),
 			bigIndex = this._nextActivePlayerIndex(smallIndex);
+		//will need to incorporate using min of player cash and round_bid
 		if (actives > 2) {
 			this._blinds = [
 				this._players[this._dealer_index],
@@ -236,18 +237,18 @@ games.holdem.game = new CT.Class({
 		var g = this, data, cash,
 			playerIndex = g._players.indexOf(p),
 			nextPlayerIndex = g._nextActivePlayerIndex(playerIndex);
-		if (msg.action == "turn" || msg.action == "summary")
+		if (["turn", "summary", "stage"].indexOf(msg.action) != -1)
 			return;
 		if (msg.action == "start")
 			return this.start();
 		if (msg.action == "move" && playerIndex == g._activeIndex) {
-			data = msg.data.split(" ").reverse();
+			data = msg.data.move.split(" ").reverse();
 			cash = data.length > 1 ? parseInt(data[1].substr(1)) : 0;
 			switch (data[0]) {
 				case "RAISE":
 					g._bid_start_index = playerIndex;
 					g._round_bid += cash;
-					g._pot[p] += g._round_bid;
+					g._pot[p] += (g._round_bid - msg.data.invested);
 					g._data[p].cash -= cash;
 					g._round_total += cash;
 					break;
@@ -268,7 +269,11 @@ games.holdem.game = new CT.Class({
 		}
 	},
 	"_summary": function() {
-		var that = this, summary = {};
+		var p, that = this, summary = {}, starting_pot = 0;
+		summary.hand_number = this._hand_number;
+		for (p in that._pot)
+			starting_pot += that._pot[p];
+		summary.starting_pot = starting_pot;
 		summary.ante = this._round_bid;
 		summary.blinds = this._blinds;
 		summary.cash = {};
@@ -276,6 +281,13 @@ games.holdem.game = new CT.Class({
 			summary.cash[pid] = that._data[pid].cash;
 		});
 		core.actor.emit(this._host.channel, "summary", summary);
+	},
+	"_stage": function() {
+		var g = this, stage = {
+				"game_stage": g._game_stage
+			};
+		//stage.pot = g._pot;
+		core.actor.emit(this._host.channel, "stage", stage);
 	},
 	"_bid": function() {
 		var g = this, b =  {
@@ -328,6 +340,7 @@ games.holdem.game = new CT.Class({
 			g._sequence[g._sequence.indexOf(g._game_stage)+1] :
 			g._sequence[0];
 		if (actives > 1) {
+			g._stage();
 			g._deal();
 			g._bid();
 		}else {
