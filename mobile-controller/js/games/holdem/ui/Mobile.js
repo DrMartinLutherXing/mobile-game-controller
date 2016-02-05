@@ -50,10 +50,17 @@ games.holdem.ui.Mobile = CT.Class({
 		turn: function(u) {
 			this.log("_responses.turn", u);
 			var t = u.message.data;
-			if (t == this.acc_name)
+			if (t == this.acc_name) {
 				this.account_name.classList.add("mymove");
-			else
+				this.timer.set(core.config.timeout);
+				this.timer.start();
+				CT.dom.show(this.timer);
+			}
+			else {
 				this.account_name.classList.remove("mymove");
+				this.timer.stop();
+				CT.dom.hide(this.timer);
+			}
 		},
 		stage: function(u) {
 			this.log("_responses.stage", u);
@@ -112,14 +119,17 @@ games.holdem.ui.Mobile = CT.Class({
 			this.view.appendChild(CT.dom.wrapped([
 				this.account_name,
 				this.current_money,
-				this.current_bid
+				this.current_bid,
+				this.timer
 			]));
 		}
 		else {
 			this.view.appendChild(CT.dom.wrapped([
 				CT.dom.wrapped([
 					CT.dom.wrapped([
-						this.table_btn, this.account_name]),
+						this.table_btn,
+						this.account_name,
+						this.timer]),
 					this.current_bid
 				], "div", "m-holdem_top"),
 				CT.dom.wrapped([
@@ -260,7 +270,8 @@ games.holdem.ui.Mobile = CT.Class({
 		this.fold_button = CT.dom.button("FOLD",
 			this.moveCb("FOLD"), "m-holdem_button fold");
 
+		this.timer = CT.dom.timer(core.config.timeout, !view.isPlayerNode && this.fold_button.onclick);
+
 		this._build();
-//		setTimeout(this.update, 0, games.holdem.initial);
 	}
 }, core.UI);
