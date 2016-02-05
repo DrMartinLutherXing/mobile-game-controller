@@ -21,7 +21,7 @@ games.holdem.ui.Mobile = CT.Class({
 			var g = this, m = u.message.data,
 				toCall = g._vars.round_bid - g._vars.invested,
 				toRaise = toCall + g._vars.next_bid,
-				move = m.split(" ").reverse(),
+				move = m.move.split(" ").reverse(),
 				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0,
 				moves = {
 					"RAISE": function() {
@@ -54,6 +54,9 @@ games.holdem.ui.Mobile = CT.Class({
 				this.account_name.classList.add("mymove");
 			else
 				this.account_name.classList.remove("mymove");
+		},
+		stage: function(u) {
+			this.log("_responses.stage", u);
 		},
 		deal: function(u) {
 			this.log("_responses.deal", u);
@@ -223,7 +226,10 @@ games.holdem.ui.Mobile = CT.Class({
 				else
 					move = m;
 				//that._update();
-				core.actor.emit(that.name, "move", move);
+				core.actor.emit(that.name, "move", {
+						"move": move,
+						"invested": that._vars.invested
+					});
 			};
 		return buttonCb;
 	},
