@@ -248,6 +248,7 @@ games.holdem.game = new CT.Class({
 			switch (data[0]) {
 				case "RAISE":
 					g._bid_start_index = playerIndex;
+					startIndex = playerIndex;
 					g._round_bid += cash;
 					g._pot[p] += (g._round_bid - msg.data.invested);
 					g._data[p].cash -= cash;
