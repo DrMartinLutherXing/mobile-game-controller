@@ -52,7 +52,7 @@ games.holdem.game = new CT.Class({
 			playerIndex = (playerIndex + 1) % playerCount;
 			player = g._players[playerIndex];
 			if (g._data[player].stat != "active")
-				g._nextActivePlayerIndex(playerIndex);
+				return g._nextActivePlayerIndex(playerIndex);
 			else return playerIndex;
 	},
 	"_setNextDealer": function() {
