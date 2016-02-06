@@ -14,15 +14,16 @@ games.holdem.ui.Mobile = CT.Class({
 			this._setAnte(s.ante);
 			this._vars.cash = s.cash[this.acc_name];
 			this._setBlinds(s.blinds);
+			this._setRange();
 			this._resetCards();
 		},
 		move: function(u) {
 			this.log("_responses.move", u);
 			var g = this, m = u.message.data,
-				toCall = g._vars.round_bid - g._vars.invested,
-				toRaise = toCall + g._vars.next_bid,
 				move = m.move.split(" ").reverse(),
 				cash = move.length > 1 ? parseInt(move[1].substr(1)) : 0,
+				toCall = g._vars.round_bid - g._vars.invested,
+				toRaise = toCall + cash,
 				moves = {
 					"RAISE": function() {
 						g._vars.round_bid += cash;
@@ -54,15 +55,12 @@ games.holdem.ui.Mobile = CT.Class({
 				this.account_name.classList.add("mymove");
 				this.timer.set(core.config.timeout);
 				this.timer.start();
-				this._setRange();
 				CT.dom.show(this.timer);
-				CT.dom.show(this.bid_slider);
 			}
 			else {
 				this.account_name.classList.remove("mymove");
 				this.timer.stop();
 				CT.dom.hide(this.timer);
-				CT.dom.hide(this.bid_slider);
 			}
 		},
 		stage: function(u) {
