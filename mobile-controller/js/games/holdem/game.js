@@ -234,7 +234,7 @@ games.holdem.game = new CT.Class({
 	},
 	"_handleUpdate": function(p, msg) {
 		this.log("_handleUpdate", p, msg);
-		var g = this, data, cash,
+		var g = this, data, cash, startIndex,
 			playerIndex = g._players.indexOf(p),
 			nextPlayerIndex = g._nextActivePlayerIndex(playerIndex);
 		if (["turn", "summary", "stage"].indexOf(msg.action) != -1)
@@ -242,6 +242,7 @@ games.holdem.game = new CT.Class({
 		if (msg.action == "start")
 			return this.start();
 		if (msg.action == "move" && playerIndex == g._activeIndex) {
+			startIndex = g._bid_start_index;
 			data = msg.data.move.split(" ").reverse();
 			cash = data.length > 1 ? parseInt(data[1].substr(1)) : 0;
 			switch (data[0]) {
@@ -258,13 +259,15 @@ games.holdem.game = new CT.Class({
 					g._round_total += cash;
 					break;
 				case "FOLD":
+					if (playerIndex == g._bid_start_index)
+						g._bid_start_index = nextPlayerIndex;
 					g._data[p].stat = "fold";
 					break;
 				default:
 					break;
 			}
 			g._activeIndex = nextPlayerIndex;
-			if (nextPlayerIndex == g._bid_start_index) g._run();
+			if (nextPlayerIndex == startIndex) g._run();
 			else g._host.turn(g._players[g._activeIndex]);
 		}
 	},
@@ -293,7 +296,7 @@ games.holdem.game = new CT.Class({
 		var g = this, b =  {
 			"preflop": function() {
 				var actives = g._numActive(),
-					smallIndex =  g._nextActivePlayerIndex(),
+					smallIndex = g._nextActivePlayerIndex(),
 					bigIndex = g._nextActivePlayerIndex(smallIndex),
 					startIndex = g._nextActivePlayerIndex(bigIndex),
 					player = g._players[startIndex];
@@ -308,7 +311,7 @@ games.holdem.game = new CT.Class({
 				}
 			},
 			"flop": function() {
-				var index =  g._nextActivePlayerIndex();
+				var index = g._nextActivePlayerIndex();
 				g._bid_start_index = index;
 				g._activeIndex = index;
 				g._host.turn(g._players[index]);
