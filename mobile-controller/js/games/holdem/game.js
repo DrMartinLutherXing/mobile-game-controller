@@ -11,6 +11,7 @@ games.holdem.game = new CT.Class({
 	"_dealer_index": 0,
 	"_hand_number": 0,
 	"_round_total": 0,
+	"_all_in": false,
 	"_blinds": [],
 	"_pot": {},
 	"_bid_start_index": 0,
@@ -62,27 +63,40 @@ games.holdem.game = new CT.Class({
 	"_updateTableBlinds": function() {
 		var actives = this._numActive(),
 			smallIndex =  this._nextActivePlayerIndex(),
-			bigIndex = this._nextActivePlayerIndex(smallIndex);
+			bigIndex = this._nextActivePlayerIndex(smallIndex),
+			smallPlayer = this._players[smallIndex],
+			bigPlayer = this._players[bigIndex],
+			roundBid = this._round_bid,
+			halfBid = roundBid / 2,
+			bigBid = Math.min(roundBid, this._data[bigPlayer].cash),
+			midBid = Math.min(roundBid, this._data[smallPlayer].cash),
+			smallBid = Math.min(halfBid, this._data[smallPlayer].cash);
 		//will need to incorporate using min of player cash and round_bid
 		if (actives > 2) {
 			this._blinds = [
 				this._players[this._dealer_index],
-				this._players[smallIndex],
-				this._players[bigIndex]
+				smallPlayer,
+				bigPlayer
 			];
-			this._pot[this._players[smallIndex]] += this._round_bid / 2;
-			this._data[this._players[smallIndex]].cash -= this._round_bid / 2;
-			this._pot[this._players[bigIndex]] += this._round_bid;
-			this._data[this._players[bigIndex]].cash -= this._round_bid;
+			this._pot[smallPlayer] += smallBid;
+			this._data[smallPlayer].cash -= smallBid;
+			this._pot[bigPlayer] += bigBid;
+			this._data[bigPlayer].cash -= bigBid;
 		}else if (actives == 2) {
-				this._blinds = [
+			this._blinds = [
 				this._players[this._dealer_index],
 				null,
-				this._players[smallIndex]
+				smallPlayer
 			];
-			this._pot[this._players[smallIndex]] += this._round_bid;
-			this._data[this._players[smallIndex]].cash -= this._round_bid;
+			this._pot[smallPlayer] += midBid;
+			this._data[smallPlayer].cash -= midBid;
 		}
+		if (this._data[smallPlayer].cash == 0 &&
+			this._data[smallPlayer].stat == 'active')
+				this._data[smallPlayer].stat = "all";
+		if (this._data[bigPlayer].cash == 0 &&
+			this._data[bigPlayer].stat == 'active')
+				this._data[bigPlayer].stat = "all";
 	},
 	"_updatePlayerCard": function(player, card, card_num) {
 		var g = this,
@@ -114,6 +128,7 @@ games.holdem.game = new CT.Class({
 		var g = this,
 			blindIncs = g._hand_number / g._blind_increase_interval;
 		g._game_stage = "";
+		g._all_in = false;
 		g._buildPot();
 		g._round_bid = 100 * Math.pow(2, Math.floor(blindIncs));
 	},
@@ -254,6 +269,17 @@ games.holdem.game = new CT.Class({
 					g._data[p].cash -= cash;
 					g._round_total += cash;
 					break;
+				case "ALL":
+					g._all_in = true;
+					g._round_total += cash;
+					g._data[p].cash = 0;
+					g._pot[p] += cash;
+					if (g._round_bid < g._data[p].cash) {
+						g._round_bid += (cash - g._round_bid);
+						g._bid_start_index = playerIndex;
+						startIndex = playerIndex;
+					}
+					break;
 				case "CALL":
 					g._pot[p] += cash;
 					g._data[p].cash -= cash;
@@ -267,6 +293,9 @@ games.holdem.game = new CT.Class({
 				default:
 					break;
 			}
+			if (g._data[p].cash == 0)
+				g._data[p].stat = "all";
+
 			g._activeIndex = nextPlayerIndex;
 			if (nextPlayerIndex == startIndex) g._run();
 			else g._host.turn(g._players[g._activeIndex]);
@@ -338,13 +367,23 @@ games.holdem.game = new CT.Class({
 		//g._round_bid = 0;//questionable maybe...
 		b[g._game_stage]();
 	},
+	"_finish": function() {
+		var g = this;
+
+		setTimeout(function() {
+			g._deal();
+			if (g._game_stage == "show") g._end();
+			else g.run();
+		}, 3000);
+	},
 	"_run": function() {
 		var g = this, actives = g._numActive();
 		g._game_stage = g._game_stage ?
 			g._sequence[g._sequence.indexOf(g._game_stage)+1] :
 			g._sequence[0];
-		if (actives > 1) {
-			g._stage();
+		g._stage();
+		if (g._all_in) g._finish();
+		else if (actives > 1) {
 			g._deal();
 			g._bid();
 		}else {
