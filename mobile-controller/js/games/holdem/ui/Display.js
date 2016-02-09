@@ -29,6 +29,10 @@ games.holdem.ui.Display = CT.Class({
 				case "CALL":
 					this._vars.round_total += cash;
 					break;
+				case "ALL":
+					this._vars.round_total += cash;
+					if (this._vars.table_bid < cash)
+						this._vars.table_bid += cash - this._vars.table_bid;
 				default:
 					break;
 			}
