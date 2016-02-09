@@ -62,7 +62,7 @@ core.Chat = CT.Class({
 		else if (d.message.action == "start")
 			data = "<i>let the games begin!</i>";
 		else if (d.message.action == "move")
-			data = "<i>" + data + "</i>";
+			data = "<i>" + data.move + "</i>";
 		else if (d.message.action == "turn")
 			data = "<i>it's <b>" + data + "</b>'s turn</i>";
 		else if (d.message.action == "deal")
@@ -71,6 +71,8 @@ core.Chat = CT.Class({
 			data = "<i>dealer flips a <b>" + data.rank + "</b> of <b>" + data.suit + "</b>s</i>";
 		else if (d.message.action == "summary")
 			data = "<i>summary: <b>" + JSON.stringify(data) + "</b></i>";
+		else if (d.message.action == "stage")
+			data = "<i>stage: <b>" + data.game_stage + "</b></i>";
 		this._write("<b>" + d.user + "</b>: " + data);
 	}
 }, core.Base);
