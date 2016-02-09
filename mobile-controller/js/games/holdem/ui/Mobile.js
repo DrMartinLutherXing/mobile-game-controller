@@ -52,12 +52,15 @@ games.holdem.ui.Mobile = CT.Class({
 			this.log("_responses.turn", u);
 			var t = u.message.data;
 			if (t == this.acc_name) {
+				this._vars.my_move = true;
 				this.account_name.classList.add("mymove");
 				this.timer.set(core.config.timeout);
 				this.timer.start();
 				CT.dom.show(this.timer);
+				this.triggerQueuedMove();
 			}
 			else {
+				this._vars.my_move = false;
 				this.account_name.classList.remove("mymove");
 				this.timer.stop();
 				CT.dom.hide(this.timer);
@@ -230,6 +233,12 @@ games.holdem.ui.Mobile = CT.Class({
 	leave: function(user) {
 		this.log("leave", user);
 	},
+	"triggerQueuedMove": function() {
+		if (this._vars.queued_move) {
+			this._vars.queued_move();
+			this._vars.queued_move = null;
+		}
+	},
 	"moveCb": function(m) {
 		//needs checks for whether player has available money
 		var that = this,
@@ -251,7 +260,12 @@ games.holdem.ui.Mobile = CT.Class({
 						"invested": that._vars.invested
 					});
 			};
-		return buttonCb;
+		return function() {
+			if (that._vars.my_move)
+				buttonCb();
+			else
+				that._vars.queued_move = buttonCb;
+		};
 	},
 	init: function(view) {
 		if (view && view.isPlayerNode) {
