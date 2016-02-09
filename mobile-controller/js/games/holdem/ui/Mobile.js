@@ -33,6 +33,15 @@ games.holdem.ui.Mobile = CT.Class({
 							g._vars.cash -= toRaise;
 						}
 					},
+					"ALL": function() {
+						if (g._vars.round_bid < cash)
+							g._vars.round_bid += cash - g._vars.round_bid;
+						if (u.user == g.acc_name) {
+							g._vars.current_bid += cash;
+							g._vars.invested += cash;
+							g._vars.cash = 0;
+						}
+					},
 					"CALL": function() {
 						if (u.user == g.acc_name) {
 							g._vars.invested += toCall;
@@ -246,12 +255,12 @@ games.holdem.ui.Mobile = CT.Class({
 				var move,
 					toCall = that._vars.round_bid - that._vars.invested,
 					toAll = that._vars.cash - toCall;
-				if (m == "CALL")
+				if (m == "ALL-IN" || toAll <= 0)
+					move = "$" + that._vars.cash  + " ALL";
+				else if (m == "CALL")
 					move = "$" + toCall + " " + m;
 				else if (m == "RAISE")
 					move = "$" + that._vars.next_bid + " " + m;
-				else if (m == "ALL-IN")
-					move = "$" + toAll  + " RAISE";
 				else
 					move = m;
 				//that._update();
