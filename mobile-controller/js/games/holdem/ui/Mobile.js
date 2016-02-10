@@ -258,7 +258,9 @@ games.holdem.ui.Mobile = CT.Class({
 				var move,
 					toCall = that._vars.round_bid - that._vars.invested,
 					toAll = that._vars.cash - toCall;
-				if (m == "ALL-IN" || toAll <= 0)
+				if (m == "FOLD")
+					move = m;
+				else if (m == "ALL-IN" || toAll <= 0)
 					move = "$" + that._vars.cash  + " ALL";
 				else if (m == "CALL")
 					move = "$" + toCall + " " + m;
