@@ -18,6 +18,12 @@ games.holdem.game = new CT.Class({
 	"_players": null,
 	"_deck": null,
 
+	"_forEachAll": function(cb) {
+		var g = this;
+		g._players.forEach(function(p) {
+			if (g._data[p].stat == "all") cb(p);
+		});
+	},
 	"_forEachActive": function(cb) {
 		var g = this;
 		g._players.forEach(function(p) {
@@ -27,6 +33,13 @@ games.holdem.game = new CT.Class({
 	"_numActive":  function() {
 		var g = this, num = 0;
 		g._forEachActive(function(){++num;});
+		return num;
+	},
+	"_numAll":  function() {
+		var g = this, num = 0;
+		g._players.forEach(function(p) {
+			if (g._data[p].stat == "all") ++num;
+		});
 		return num;
 	},
 	"_initPlayer": function(p) {
@@ -115,10 +128,10 @@ games.holdem.game = new CT.Class({
 		g._host.flip(card);
 	},
 	"_updatePlayersStatus": function() {
-		var g = this, playerData;
+		var g = this;
 		g._players.forEach(function(p) {
-			playerData = g._data[p];
-			if (playerData.stat == "fold")
+			var playerData = g._data[p];
+			if (["fold", "all"].indexOf(playerData.stat) != -1)
 				playerData.stat = "active";
 			if (playerData.cash <= 0)
 				playerData.stat = "inactive";
@@ -197,6 +210,14 @@ games.holdem.game = new CT.Class({
 			else if (g._data[winners[0]].rank.compare(g._data[player].rank) == 0)
 				winners.push(player);
 		});
+		g._forEachAll(function(player) {
+			if (winners.length == 0)
+				winners.push(player);
+			else if (g._data[winners[0]].rank.compare(g._data[player].rank) < 0)
+				winners = [player];
+			else if (g._data[winners[0]].rank.compare(g._data[player].rank) == 0)
+				winners.push(player);
+		});
 		console.log("WINNERS: ");
 		console.log(winners);
 
@@ -204,6 +225,7 @@ games.holdem.game = new CT.Class({
 	},
 	"_determineWinners": function() {
 		var g = this;
+		g._forEachAll(g._rankHand);
 		g._forEachActive(g._rankHand);
 		g._distributePot(g._bestHandRanks());
 	},
@@ -249,14 +271,17 @@ games.holdem.game = new CT.Class({
 	},
 	"_handleUpdate": function(p, msg) {
 		this.log("_handleUpdate", p, msg);
-		var g = this, data, cash, startIndex,
-			playerIndex = g._players.indexOf(p),
-			nextPlayerIndex = g._nextActivePlayerIndex(playerIndex);
+		var g = this, data, cash, startIndex, nextPlayerIndex,
+			both, alls, actives, playerIndex = g._players.indexOf(p);
 		if (["turn", "summary", "stage"].indexOf(msg.action) != -1)
 			return;
 		if (msg.action == "start")
-			return this.start();
+			return g.start();
 		if (msg.action == "move" && playerIndex == g._activeIndex) {
+			if ((g._numActive() == 1 && g._numAll() == 0) ||
+				g._numActive() == 0)
+					return g._run();
+			nextPlayerIndex = g._nextActivePlayerIndex(playerIndex);
 			startIndex = g._bid_start_index;
 			data = msg.data.move.split(" ").reverse();
 			cash = data.length > 1 ? parseInt(data[1].substr(1)) : 0;
@@ -270,7 +295,6 @@ games.holdem.game = new CT.Class({
 					g._round_total += cash;
 					break;
 				case "ALL":
-					g._all_in = true;
 					g._round_total += cash;
 					g._data[p].cash = 0;
 					g._pot[p] += cash;
@@ -293,12 +317,27 @@ games.holdem.game = new CT.Class({
 				default:
 					break;
 			}
+
 			if (g._data[p].cash == 0)
 				g._data[p].stat = "all";
+			alls = g._numAll();
+			actives = g._numActive();
+			both = actives + alls;
 
-			g._activeIndex = nextPlayerIndex;
-			if (nextPlayerIndex == startIndex) g._run();
-			else g._host.turn(g._players[g._activeIndex]);
+			if ((actives == 0 && alls > 1) || (both == 2))
+				g._all_in = true;
+
+			if (alls == 1 && actives == 0)
+				g._forEachAll(function(p) {
+						g._activeIndex = g._players.indexOf(p);
+					});
+			else
+				g._activeIndex = nextPlayerIndex;
+
+			if (actives == 0 || nextPlayerIndex == startIndex)
+				g._run();
+			else
+				g._host.turn(g._players[g._activeIndex]);
 		}
 	},
 	"_summary": function() {
@@ -362,33 +401,34 @@ games.holdem.game = new CT.Class({
 				g._end();
 			}
 		};
-		if (g._numActive() < 2)
+		if (g._numActive() == 1 && g._numAll() == 0)
 			return g._run();
 		//g._round_bid = 0;//questionable maybe...
 		b[g._game_stage]();
 	},
 	"_finish": function() {
 		var g = this;
-
-		setTimeout(function() {
-			g._deal();
-			if (g._game_stage == "show") g._end();
-			else g.run();
-		}, 3000);
+		g._deal();
+		if (g._game_stage == "show")
+			return g._end();
+		setTimeout(g._run, 5000);
 	},
 	"_run": function() {
-		var g = this, actives = g._numActive();
+		this.log([this._game_stage, this._numActive(), this._numAll()]);
+		var g = this, actives = g._numActive(),
+			alls = g._numAll();
 		g._game_stage = g._game_stage ?
 			g._sequence[g._sequence.indexOf(g._game_stage)+1] :
 			g._sequence[0];
 		g._stage();
-		if (g._all_in) g._finish();
-		else if (actives > 1) {
-			g._deal();
-			g._bid();
-		}else {
+		if (alls + actives == 1) {
 			g._distributePot([g._players[g._activeIndex]]);
 			g._end();
+		}else if (g._all_in) {
+			g._finish();
+		}else if (actives > 1) {
+			g._deal();
+			g._bid();
 		}
 	},
 	"_clean": function() {
@@ -406,7 +446,7 @@ games.holdem.game = new CT.Class({
 		g._resetRound();
 		if (g._numActive() == 1)
 			g._forEachActive(function(player) {
-				this.log("winner", player);
+				g.log("winner", player);
 //				g._display.setWinner(player);
 			});
 		else {
