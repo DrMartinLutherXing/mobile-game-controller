@@ -235,8 +235,11 @@ games.holdem.ui.Mobile = CT.Class({
 	},
 	"triggerQueuedMove": function() {
 		if (this._vars.queued_move) {
-			this._vars.queued_move();
+			var btn = this._vars.queued_move[0],
+				cb = this._vars.queued_move[1];
 			this._vars.queued_move = null;
+			btn.classList.remove("premove");
+			cb();
 		}
 	},
 	"moveCb": function(m) {
@@ -263,8 +266,10 @@ games.holdem.ui.Mobile = CT.Class({
 		return function() {
 			if (that._vars.my_move)
 				buttonCb();
-			else
-				that._vars.queued_move = buttonCb;
+			else {
+				that._vars.queued_move = [this, buttonCb];
+				this.classList.add("premove");
+			}
 		};
 	},
 	init: function(view) {
