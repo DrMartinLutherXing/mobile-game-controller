@@ -8,7 +8,7 @@ core.Chat = CT.Class({
 		data.presence.forEach(this._adduser);
 		this.button = CT.dom.button("show chat",
 			this.toggle, "chat_button");
-		this.node = CT.dom.wrapped([
+		this.node = CT.dom.node([
 			this._presence,
 			this._out,
 			this._in
